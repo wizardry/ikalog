@@ -1,0 +1,83 @@
+@charset "utf-8";
+
+///*mixin*/
+@mixin s_txtimg(){
+	overflow:hidden;
+	line-height:2;
+	height:0;
+	display:block;
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+@mixin txtimg($width,$height){
+	overflow:hidden;
+	line-height:2;
+	height:0;
+	display:block;
+	background-position: left top;
+	background-repeat: no-repeat;
+	-webkit-background-size: $width+px $height+px;
+	background-size: $width+px $height+px;
+	width: $width+px;
+	padding-top: $height+px;
+}
+@mixin grade($topColor,$bottomColor,$topPos:0%,$bottomPos:100%){
+	background: $topColor; // Old browsers 
+	background: -moz-linear-gradient(top,  $topColor $topPos, $bottomColor $bottomPos); // FF3.6+
+	background: -webkit-gradient(linear, left top, left bottom, color-stop($topPos,$topColor), color-stop($bottomPos,$bottomColor)); // Chrome,Safari4+
+	background: -webkit-linear-gradient(top,  $topColor $topPos,$bottomColor $bottomPos); // Chrome10+,Safari5.1+
+	background: -o-linear-gradient(top,  $topColor $topPos,$bottomColor $bottomPos); // Opera 11.10+
+	background: -ms-linear-gradient(top,  $topColor $topPos,$bottomColor $bottomPos); // IE10+
+	background: linear-gradient(to bottom,  $topColor $topPos,$bottomColor $bottomPos); // W3C
+}
+@mixin herfGrade($color1,$color2,$color3,$color4){
+	background: $color1; ///* Old browsers */
+	background: -moz-linear-gradient(top,  $color1 0%, $color2 50%, $color3 51%, $color4 100%); ///* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$color1), color-stop(50%,$color2), color-stop(51%,$color3), color-stop(100%,$color4)); ///* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  $color1 0%,$color2 50%,$color3 51%,$color4 100%); ///* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  $color1 0%,$color2 50%,$color3 51%,$color4 100%); ///* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  $color1 0%,$color2 50%,$color3 51%,$color4 100%); ///* IE10+ */
+	background: linear-gradient(to bottom,  $color1 0%,$color2 50%,$color3 51%,$color4 100%); ///* W3C */
+}
+
+///*extend class*/
+@mixin clearfix{
+	*zoom: 1;
+	&:after {
+		content: " ";
+		display: block;
+		height: 0;
+		visibility: hidden;
+		clear: both;
+		overflow: hidden;
+		font-size: 0.1em;
+		line-height: 0;
+	}
+}
+@mixin notLineBreak{
+	white-space: nowrap;
+	word-wrap:normal;
+	word-break:normal;
+}
+@mixin LineBreak{
+	white-space:normal;
+	word-wrap:break-all;
+	word-break:break-word;
+}
+
+@mixin animAdd($propaty:background-color,$time:0.5s, $timing:ease-in ,$delay:0s){
+	transition: $propaty , $time , $timing , $delay;
+	-ms-transition: $propaty , $time , $timing , $delay;
+	-webkit-transition: $propaty , $time , $timing , $delay;
+	-moz-transition: $propaty , $time , $timing , $delay;
+}
+@mixin mediaL{
+    @media ($mediaQueryLearge){
+        @content;
+    }
+}
+@mixin mediaS{
+    @media ($mediaQuerySmall){
+        @content;
+    }
+}

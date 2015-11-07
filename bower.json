@@ -1,0 +1,21 @@
+{
+  "name": "templates",
+  "version": "0.0.0",
+  "authors": [
+    ""
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "1.11.2",
+    "jquery-cookie": "~1.4.1",
+    "underscore": "~1.8.3",
+    "backbone": "~1.1.2"
+  }
+}

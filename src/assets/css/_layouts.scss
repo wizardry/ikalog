@@ -1,0 +1,22 @@
+@charset "utf-8";
+@import "vars";
+
+%clearfix{
+	@include clearfix();
+}
+
+/** layouts **/
+/*global haeder*/
+.globalHeader{
+	@extend %clearfix;
+	width: 100%;
+}
+
+/*global footer*/
+.globalFooter{
+	@extend %clearfix;
+	width: 100%;
+}
+
+
+/*etc*/

@@ -1,0 +1,12 @@
+{
+	"globals":{
+		"require" : false,
+		"_":false,
+		"Backbone":false,
+		"App":false
+	},
+	"immed":false,
+	"indent":4,
+	"asi":false
+
+}

@@ -1,0 +1,73 @@
+@charset "utf-8";
+@import "reset";
+@import "mixin";
+@import "vars";
+@import "layouts";
+@import "buttons";
+@import "tables";
+@import "form";
+
+body{
+	min-width:map-get($default,contentWidth);
+	line-height:map-get($default,line-height);
+	font-size:map-get($default,font-size);
+	color:map-get($default,color);
+	font-family:map-get($default,font-family);
+	position: relative;
+}
+
+%clearfix{
+	@include clearfix();
+}
+
+
+
+/*grid base*/
+.gridSysWrap{
+	$gridValues:(
+		maxCol:12,
+		maxWidth:1200,
+		cellPadding:10,
+		cellMargin:8
+	);
+	@for $i from 1 through map-get($gridValues,maxCol) {
+		.col#{$i}in#{i2} {
+			
+		}
+	}
+
+}
+
+/*typography/headline*/
+.sectionHeadline{}
+.chapterHeadline{}
+.partHeadline{}
+
+.documentHeadline{}
+.formHeadline{}
+
+.read{}
+.copy{}
+
+/*blocks
+	class hieralcy
+	.fugaPage > .hogeBlock > .fizzArea
+*/
+.sectionBlock{}
+
+/** other components **/
+.hide{
+	display: none;
+}
+
+/*content*/
+.contentWrap{
+	@extend %clearfix;
+	width: 100%;
+}
+
+/** etc **/
+
+/*navigation*/
+.globalNav{}
+.breadcrumb{}

@@ -1,0 +1,55 @@
+@charset "utf-8";
+@import "vars";
+
+%clearfix{
+	@include clearfix();
+}
+
+/*form base*/
+// hint
+// numberはブラウザによってボタンが付与される
+// 
+
+input[type=text],input[type=password],
+input[type=email],input[type=number],input[type=url],
+input[type=search],input[type=tel]{}
+
+
+// hint
+// html5 UIはブラウザ依存
+input[type=datetime-local],input[type=date],
+input[type=month],input[type=week],
+input[type=time],input[type=datetime]{}
+
+// hint
+// optionを弄るなら独自で作成する
+// multipleを考慮してheightは指定しない。
+//　もしくは[multiple]にて別途指定する。
+select{}
+
+//
+textarea{}
+
+// ブラウザ依存が激しい為弄らないが吉
+input[type=file]{}
+
+// hint
+// cakeと連動する場合FormHelperに合わせること
+.checkboxList,.radioList{
+	label{}
+	input[type=checkbox],input[type=radio]{}
+	.horizontal{}
+	.vertical{}
+	.col{}
+}
+
+// hint
+// confirm用classを用意しておけば word-breakなどの指定を忘れ難い。
+// また、テキストの位置調整にも悩まされ難い。
+.inputConfirmText{}
+.inputConfirmSelect{}
+.inputConfirmTextarea{}
+
+/* form layouat */
+.formWrap{}
+.oneLinerForm{}
