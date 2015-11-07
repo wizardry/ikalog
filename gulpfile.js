@@ -26,7 +26,7 @@ var connect = require('gulp-connect');
 var jshint = require('gulp-jshint');
 
 g.task('lint', function() {
-	return g.src(srcPath + '**/js/**/*.js')
+	return g.src([srcPath + '**/js/**/*.js','!'+srcPath + '**/js/lib/*.js'])
 	.pipe(jshint())
 	.pipe(jshint.reporter('default'));
 });
@@ -34,7 +34,7 @@ g.task('lint', function() {
 g.task('sass',function(){
 	var minCssFlg = true;
 	console.log('gulp task sass ---------satar');
-	return scss(srcPath+'css/',
+	return scss(srcPath+'assets/css/',
 		{
 			style:'expanded',
 			sourcemap:true
