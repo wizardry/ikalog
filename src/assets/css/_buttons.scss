@@ -1,0 +1,61 @@
+@charset "utf-8";
+@import "vars";
+
+%clearfix{
+	@include clearfix();
+}
+
+/*button base*/
+// hint
+// button,input[type=button],input[type=submit],input[type=reset]はブラウザに依存する。
+// labelで括りstyleを当てた方が調整しやすい。
+// * しかし一部でバグあり。iphoneなどはjs対応が必要。
+// a{}等と指定してもそれが最終的にaタグとは限らない。
+// span,labelなどに置き変わることも考慮する。
+.submitBase{
+	&.primary{}
+	&.secondary{}
+	&.terthiry{}
+	&.success{}
+	&.active{}
+	&.disable{}
+	&.warning{}
+	&.attention{}
+	&.inverse{}
+	&.info{}
+	&.default{}
+}
+.actionButtonBase{
+	&.primary{}
+	&.secondary{}
+	&.terthiry{}
+	&.success{}
+	&.active{}
+	&.disable{}
+	&.warning{}
+	&.attention{}
+	&.inverse{}
+	&.info{}
+	&.default{}
+}
+.linkButtonBase{
+	&.primary{}
+	&.secondary{}
+	&.terthiry{}
+	&.success{}
+	&.active{}
+	&.disable{}
+	&.warning{}
+	&.attention{}
+	&.inverse{}
+	&.info{}
+	&.default{}
+}
+
+// hint
+// ボタン数の増減は考慮出来ているか
+// 不意な要素が入る可能性は考慮出来ているか（ex:ボタンの下にsup,サブボタンなど）
+.submitArea{}
+.actionButtonArea{}
+.linkButtonARea{}
+.buttonGroup{}

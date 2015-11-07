@@ -1,0 +1,18 @@
+@charset "utf-8";
+@import "vars";
+
+%clearfix{
+	@include clearfix();
+}
+
+/*table*/
+// hint
+// tr,thead,tbody に対してのstyleはIE8-などで効かない。
+// colgroupを有効活用できるならする。
+.defTableList{}
+.stripeTable{}
+.hirizonTableList{}
+
+// hint
+// 古いブラウザに対応する場合はブラウザ依存が多いform類に限りテーブルレイアウトも一考。
+.formTable{}
