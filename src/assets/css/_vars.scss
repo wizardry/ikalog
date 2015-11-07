@@ -13,22 +13,17 @@ $default:(
 	borderColor:#ccc,
 	borderRadius:3px
 );
-$themeColor:(
-	primary:(
-		normal:#000,
-		hover:#000,
-		current:#000
-	),
-	secondary:(
-		normal:#000,
-		hover:#000,
-		current:#000
-	),
-	tertiary:(
-		normal:#000,
-		hover:#000,
-		current:#000
-	)
-);
 $mediaQueryLearge :"min-width:768px";
 $mediaQuerySmall :"max-width:767px";
+
+$blue_base:#2e7272;
+$blue_darkest:#030d27;
+$blue_dark:#10214d;
+$blue_light:#5c6d97;
+$blue_lightest:#9faac5;
+
+$green_base:#277455;
+$green_darkest:#002818;
+$green_dark:#084e32;
+$green_light:#569a7e;
+$green_lightest:#9cc7b5;

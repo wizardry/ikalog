@@ -20,54 +20,19 @@ body{
 	@include clearfix();
 }
 
-
-
-/*grid base*/
-.gridSysWrap{
-	$gridValues:(
-		maxCol:12,
-		maxWidth:1200,
-		cellPadding:10,
-		cellMargin:8
-	);
-	@for $i from 1 through map-get($gridValues,maxCol) {
-		.col#{$i}in#{i2} {
-			
-		}
-	}
-
-}
-
-/*typography/headline*/
-.sectionHeadline{}
-.chapterHeadline{}
-.partHeadline{}
-
-.documentHeadline{}
-.formHeadline{}
-
-.read{}
-.copy{}
-
-/*blocks
-	class hieralcy
-	.fugaPage > .hogeBlock > .fizzArea
-*/
-.sectionBlock{}
-
-/** other components **/
 .hide{
 	display: none;
 }
 
-/*content*/
-.contentWrap{
-	@extend %clearfix;
-	width: 100%;
+.inputPageBlock{
+	background:$blue_base;
 }
-
-/** etc **/
-
-/*navigation*/
-.globalNav{}
-.breadcrumb{}
+.outputPageBlock{
+	background:$green_base;
+}
+.settingPageBlock{
+	background:$blue_base;
+}
+.howtoPageBlock{
+	background:$green_base;
+}
