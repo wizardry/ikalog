@@ -12,23 +12,35 @@
 			dt 勝率
 			dd.js-winRatio
 		script(type="text/html" id="outputListTemp")
-			td <%= kill %>
-			td <%= death %>
-			td <%= rule %>
-			td <%= stage %>
-			td <%= result %>
-			td <%= comment %>
-			td <%= date %>
-		script(type="text/html" id="outputListWrapTemp")
+			h3.viewTitle 
+				span(class!="result <%= resultClass() %>") <%= _result() %>
+				span.date <%= date %>
 			table.viewTableRow
-				thead
-					tr
-						th kill
-						th death
-						th rule
-						th stage
-						th result
-						th comment
-						th date
+				tr.kill
+					th kill
+					td <%= kill %>
+				tr.death
+					th death
+					td <%= death %>
+				tr.rule
+					th rule
+					td <%= _rule() %>
+				tr.stage
+					th stage
+					td <%= _stage() %>
+				tr.comment
+					th comment
+					td <%= comment %>
+			p.editButtonWrap
+				a.editButton.js-edit(data-modelid!="<%= id%>") この戦績を編集する
+
+		script(type="text/html" id="outputListWrapTemp")
+			.sectionBlock
+						
+						
+						
+						
+						
+						
 				tbody#outputListElem
 		div#outputListWrap
