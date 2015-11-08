@@ -1,2 +1,34 @@
 .outputPageBlock
 	h2 閲覧
+	.filterSetitngArea.js-filterSettingView
+	.viewArea.js-outputView
+		dl
+			dt k/d比
+			dd.js-scoreRatio
+		dl
+			dt k/d平均
+			dd.js-scoreAverage
+		dl
+			dt 勝率
+			dd.js-winRatio
+		script(type="text/html" id="outputListTemp")
+			td <%= kill %>
+			td <%= death %>
+			td <%= rule %>
+			td <%= stage %>
+			td <%= result %>
+			td <%= comment %>
+			td <%= date %>
+		script(type="text/html" id="outputListWrapTemp")
+			table.viewTableRow
+				thead
+					tr
+						th kill
+						th death
+						th rule
+						th stage
+						th result
+						th comment
+						th date
+				tbody#outputListElem
+		div#outputListWrap

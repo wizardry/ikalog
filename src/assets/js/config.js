@@ -22,7 +22,7 @@ app.Router = Backbone.Router.extend({
 	},
 	index:function index(){
 		$(function(){
-			app.settingView = new app.instans.View.BasicInputForm({
+			var settingView = new app.instans.View.BasicInputForm({
 				model:{
 					weapon:app.model.weaponMaster,
 					stage:app.model.stageMaster,
@@ -37,17 +37,37 @@ app.Router = Backbone.Router.extend({
 				},
 				collection:app.model.scores,
 			});
-			
+			$('.howtoPageBlock,.outputPageBlock,.settingPageBlock').hide();
+			$('.inputPageBlock').show();
 		})
 	},
 	output:function index(){
-		app.view.outputView.render();
+		$(function(){
+			var scoreView  = new app.instans.View.ScoreList({
+				collection:app.model.scores
+			});
+			var filterView = new app.instans.View.outputFileter({
+				model:app.model.filter
+			});
+			scoreView.render();
+			// app.view.outputView.render();
+			$('.howtoPageBlock,.inputPageBlock,.settingPageBlock').hide();
+			$('.outputPageBlock').show();
+		})
 	},
 	howto:function index(){
-		app.view.howtoView.render();
+		$(function(){
+			// app.view.howtoView.render();
+			$('.inputPageBlock,.outputPageBlock,.settingPageBlock').hide();
+			$('.howtoPageBlock').show();
+		})
 	},
 	settings:function index(){
-		app.view.settingsView.render();
+		$(function(){
+			// app.view.settingsView.render();
+			$('.howtoPageBlock,.outputPageBlock,.inputPageBlock').hide();
+			$('.settingPageBlock').show();
+		})
 	},
 });
 

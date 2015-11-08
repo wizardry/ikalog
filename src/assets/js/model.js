@@ -4,6 +4,10 @@ app.instans.Model = {};
 app.instans.Model.BasicSetting = Backbone.Model.extend({
 
 })
+//閲覧フィルター
+app.instans.Model.outputFilter = Backbone.Model.extend({
+
+})
 //スコア
 app.instans.Model.Score = Backbone.Model.extend({
 	defaults:{
