@@ -1,59 +1,68 @@
 .inputPageBlock
 	h2 入力
 
-	h3 基本設定
-	dl
-		dt ウデマエ
-		dd
-			select#basicInputUdemae
-				option(value="none") 設定しない
-				- var udemae = ['C-','C','C+','B-','B','B+','A-','A','A+','S','S+'];
-				each val in udemae 
-					option(value="#{val}") val
-	dl
-		dt ルール
-		dd
-			select#basicInputRule
-				option(value="none") 設定しない
-				- var rules = ['ナワバリ','エリア','ヤグラ','ホコ'];
-				each val in rules
-					option(value="#{val}") val
-	dl
-		dt ステージ
-		dd
-			select#basicInputStage
-	dl
-		dt ブキ
-		dd
-			select#basicInputWeapon
-	dl
-		dt コメントテンプレート
-		dd
-			textarea#basicInputComment
-	h3 戦績
-	dl
-		dt Kill
-		dd
-			input
-	dl
-		dt Death
-		dd
-			input
-	dl
-		dt ステージ
-		dd#inputStageWrap
-	dl
-		dt 勝敗
-		dd
-			ul
-				- var result = [{val:0,name:'ノックアウト勝ち'},{val:1,name:'タイムアップ勝ち'},{val:2,name:'タイムアップ負け'},{val:3,name:'ノックアウト負け'}]
-				each val in result
-					li
-						input(type="radio" name="inputResult" value="#{val.val}" id="inputResult_#{val}")
-						label(for="inputResult_#{val}")= val.name
-	dl
-		dt コメント
-		dd
-			textarea#InputComment
-	.submitWrap
-		p.submitArea 登録
+	.sectionBlock.basicSettingBlock.js-toggleWrap.js-basicSettingView
+		.buttonWrap
+			p.button.js-toggleTrigger 基本設定
+		.formWrap.js-toggleContent.hide
+			dl
+				dt ウデマエ
+				dd
+					select#basicInputUdemae
+						option(value="none") 設定しない
+						- var udemae = ['C-','C','C+','B-','B','B+','A-','A','A+','S','S+'];
+						each val in udemae 
+							option(value="#{val}")= val
+			dl
+				dt ルール
+				dd
+					select#basicInputRule
+						option(value="none") 設定しない
+						- var rules = ['ナワバリ','エリア','ヤグラ','ホコ'];
+						each val in rules
+							option(value="#{val}")= val
+			dl
+				dt ステージ
+				dd
+					select#basicInputStage
+						option(value="none") 設定しない
+
+			dl
+				dt ブキ
+				dd
+					select#basicInputWeapon
+						option(value="none") 設定しない
+						
+			dl
+				dt コメントテンプレート
+				dd
+					textarea#basicInputComment
+	.sectionBlock.js-inputFormView
+		h3 戦績
+		.formWrap
+			dl
+				dt Kill
+				dd
+					input(type="number" id="inputKill")
+			dl
+				dt Death
+				dd
+					input(type="number" id="inputDeath")
+			dl
+				dt ステージ
+				dd#inputStageWrap
+			dl
+				dt 勝敗
+				dd
+					ul.radioList.result
+						- var result = [{val:0,name:'ノックアウト勝ち'},{val:1,name:'タイムアップ勝ち'},{val:2,name:'タイムアップ負け'},{val:3,name:'ノックアウト負け'}]
+						each val in result
+							li
+								input(type="radio" name="inputResult" value="#{val.val}" id="inputResult_#{val.val}")
+								label(for="inputResult_#{val.val}")= val.name
+			dl
+				dt コメント
+				dd
+					textarea#InputComment
+		.submitWrap
+			p.submitArea.button 登録

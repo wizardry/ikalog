@@ -21,13 +21,13 @@ html(lang="ja")
         link(rel="canonical" href="")
         link(rel="stylesheet" href="./assets/css/default.css")
         script(src="./assets/js/lib/jquery.min.js")
-        //- script(src="./assets/js/lib/jquery.cookie.js")
         script(src="./assets/js/lib/underscore-min.js")
         script(src="./assets/js/lib/backbone.js")
         script(src="./assets/js/lib/backbone.localStorage-min.js")
         script(src="./assets/js/lib/backbone.wreqr.js")
         script(src="./assets/js/lib/backbone.babysitter.js")
         script(src="./assets/js/lib/backbone.marionette.min.js")
+        script(src="./assets/js/config.js")
         script(src="./assets/js/model.js")
         script(src="./assets/js/view.js")
         script(src="./assets/js/app.js")
@@ -39,6 +39,6 @@ html(lang="ja")
             ="\n"
             block content
             ="\n"
+            .footerOuter
+                include ../include/_globalFooter.jade
 
-        .footerOuter
-            include ../include/_globalFooter.jade
