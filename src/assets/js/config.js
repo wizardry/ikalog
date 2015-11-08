@@ -26,10 +26,17 @@ app.Router = Backbone.Router.extend({
 				model:{
 					weapon:app.model.weaponMaster,
 					stage:app.model.stageMaster,
-					setting:app.model.setting,
+					setting:app.model.inputSetting,
 				}
 			});
-			var formView = new app.instans.View.InputForm();
+			var formView = new app.instans.View.InputForm({
+				model:{
+					weapon:app.model.weaponMaster,
+					stage:app.model.stageMaster,
+					setting:app.model.inputSetting
+				},
+				collection:app.model.scores,
+			});
 			
 		})
 	},
@@ -43,3 +50,44 @@ app.Router = Backbone.Router.extend({
 		app.view.settingsView.render();
 	},
 });
+
+//functions
+app.funcs = {
+	optionGen:function(data){
+		var node = '';
+		node += '<option value="none">設定しない</option>'
+		_.each(data,function(modeldata,i){
+			node += '<option value="'+modeldata+'">' +modeldata+ '</option>'
+		})
+		return node;
+	},
+	checkboxGen:function(data,name){
+		var node = '';
+		node += '<li>'
+		node += '<input type="checkbox" value="none" name="'+name+'" id="'+name+'_none">'
+		node += '<label for="'+name+'_none">設定しない</label>'
+		node += '</li>'
+		_.each(data,function(modeldata,i){
+			node += '<li>'
+			node += '<input type="checkbox" value="'+modeldata+'" name="'+name+'" id="'+name+'_'+i+'">'
+			node += '<label for="'+name+'_'+i+'">'+modeldata+'</label>'
+			node += '</li>'
+		})
+		return node;
+	},
+	radioGen:function(data,name){
+		var node = '';
+		node += '<li>'
+		node += '<input type="radio" value="none" name="'+name+'" id="'+name+'_none">'
+		node += '<label for="'+name+'_none">設定しない</label>'
+		node += '</li>'
+		_.each(data,function(modeldata,i){
+			node += '<li>'
+			node += '<input type="radio" value="'+modeldata+'" name="'+name+'" id="'+name+'_'+i+'">'
+			node += '<label for="'+name+'_'+i+'">'+modeldata+'</label>'
+			node += '</li>'
+		})
+		return node;
+	}
+
+}
