@@ -214,14 +214,17 @@ label.button{
 
 }
 .viewArea{
+	.viewBlock{
+		margin:12px 0;
+	}
 	dl{
 		margin-top: 10px;
 		display:flex;
 		justify-content:center;
 	}
 	dt {
-		width: 50%;
 		padding:5px 10px;
+		width: 50%;
 		border-top: 1px solid #000;
 		border-bottom: 1px solid #000;
 		border-left: 1px solid #000;
@@ -230,6 +233,7 @@ label.button{
 		box-sizing:border-box;
 	}
 	dd{
+		padding:5px 10px;
 		background:#dfdfdf;
 		border-top: 1px solid #000;
 		border-right: 1px solid #000;
@@ -237,12 +241,19 @@ label.button{
 		width: 50%;
 		box-sizing:border-box;
 		text-align: right;
+		font-weight: bold;
+		span{
+			margin:0 2px;
+			font-weight: normal;
+			font-size: 10px;
+			vertical-align: baseline;
+		}
 	}
 	dt,dd{
 		flex-direction:row;
 	}
 	.viewTableRow{
-		margin:16px 0;
+		margin:6px 0;
 		width: 100%;
 		table-layout: fixed;
 		border-right: 1px solid #666;
@@ -259,6 +270,7 @@ label.button{
 			font-size: 10px;
 			background:#333;
 			color:#fff;
+			text-align: left;
 		}
 		td{
 			border-left: 1px solid #666;
@@ -271,6 +283,41 @@ label.button{
 				background:#aaa;
 			}
 		}
+		.kill,.death,.date{
+			text-align: right;
+		}
+		.date{
+			td{
+				font-size: 10px;
+			}
+		}
+	}
+	.viewTitle{
+		font-size: 16px;
+		font-weight: bold;
+		@extend %clearfix;
+		span{
+			width: 50%;
+			display: inline-block;
+		}
+		.date{
+			font-size: 10px;
+			text-align: right;
+		}
+		.result{
+		}
+		.resWin{
+			color:#DC143C;
+		}
+		.resLose{
+			color: #1C00AB;
+		}
+	}
+	.editButtonWrap{
+		text-align: right;
+		.editButton{
+			text-decoration: underline;
+			color:#fff;
+		}
 	}
 }
-		

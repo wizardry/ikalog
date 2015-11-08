@@ -204,23 +204,84 @@ app.instans.View.InputForm = Marionette.View.extend({
 //output
 app.instans.View.ScoreItem = Marionette.ItemView.extend({
 	template:'#outputListTemp',
-	tagName:'tr',
+	tagName:'div',
+	className:'viewBlock',
+	templateHelpers:{
+		_result:function(){
+			return app.const.get('result')[this.result].name;
+		},
+		resultClass:function(res){
+			var classname = '';
+			if(this.result === '0' || this.result === '1'){
+				classname =  'resWin';
+			}else{
+				classname =  'resLose';
+			}
+			return classname;
+		},
+		_rule:function(){
+			var _rule = this.rule;
+			if(!this.rule || this.rule === 'none'){
+				_rule = '設定なし';
+			}
+			return _rule;
+		},
+		_stage:function(){
+			var _stage = this.stage;
+			if(!this.rule || this.rule === 'none'){
+				_stage = '設定なし';
+			}
+			return _stage
+		}
+	},
 });
 
 app.instans.View.ScoreList = Marionette.CompositeView.extend({
 	el:'#outputListWrap',
 	template:'#outputListWrapTemp',
 	childViewContainer:function(){
-		return 'tbody'
+		return '.sectionBlock';
 	},
 	childView:app.instans.View.ScoreItem,
 	ui:{},
 	events:{},
 	initialize:function(){
 		this.listenTo(this.collection,'sync',this.render);
+		this.listenTo(this.collection,'sync',this.math);
+		this.math();
 	},
 	attachHtml:function(collectionView, childView){
-		collectionView.$el.find('tbody').prepend(childView.el);
+		collectionView.$el.find('.sectionBlock').prepend(childView.el);
+	},
+	math:function(){
+		var killRatio,killAvg,winRatio;
+		var len        = this.collection.length;
+		var killTotal  = 0;
+		var deathTotal = 0
+		var winlose    = [0,0]
+		console.log(this.collection)
+		_.each(this.collection.models,function(model,i){
+			console.log(model)
+			console.log(i)
+			killTotal  = killTotal + parseInt(model.get('kill'));
+			deathTotal = deathTotal + parseInt(model.get('death'));
+			if(model.get('result') === '0' || model.get('result') === '1' ){
+				winlose[0]++
+			}else{
+				winlose[1]++
+			}
+		});
+		killRatio = Math.floor( (killTotal / deathTotal) * 100 ) / 100;
+		killAvg   = [ 
+						Math.floor( (killTotal / len) * 100) / 100 ,
+						Math.floor( (deathTotal / len) * 100) / 100
+					];
+		winRatio  = Math.floor( (winlose[0] / len) * 100 ) / 100;
+		console.log('killRatio:' + killRatio + ' killAvg:' + killAvg + ' winRatio:' + winRatio)
+
+		$('.js-scoreRatio').html(killRatio+'<span>kill</span>');
+		$('.js-scoreAverage').html(killAvg[0] + '<span>k</span> / ' + killAvg[1] + '<span>d</span>');
+		$('.js-winRatio').html(winRatio + '<span>%</span>');
 	},
 });
 app.instans.View.outputFileter = Marionette.View.extend({
