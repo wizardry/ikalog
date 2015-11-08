@@ -20,7 +20,8 @@ app.instans.Model.Score = Backbone.Model.extend({
 	}
 });
 app.instans.Model.Scores = Backbone.Collection.extend({
-
+	model:app.instans.Model.Score,
+	localStorage: new Backbone.LocalStorage('scores'),
 });
 
 
@@ -41,9 +42,14 @@ app.instans.Model.Users = Backbone.Collection.extend({
 				id:0,
 				name:'ユーザー1'
 			});
+			this.currentUser = 0;
+			localStorage.currentUser = 0;
 			// localStorage[users] = 'users'
+		}else{
+			this.currentUser = localStorage.currentUser;
 		}
 	},
+	currentUser:null,
 	localStorage: new Backbone.LocalStorage('users'),
 });
 
@@ -62,8 +68,24 @@ app.instans.Model.Stage = Backbone.Model.extend({
 	},
 	url:'./assets/js/json/stage.json',
 });
-app.instans.Model.Const = Backbone.Collection.extend({
+app.instans.Model.Const = Backbone.Model.extend({
 	initialize:function(){
 
+		//リザルトマスタ
+		this.set({
+			result:[{
+					val:0,
+					name:'ノックアウト勝ち'
+				},{
+					val:1,
+					name:'タイムアップ勝ち'
+				},{
+					val:2,
+					name:'タイムアップ負け'
+				},{
+					val:3,
+					name:'ノックアウト負け'
+			}]
+		})
 	},
 });
