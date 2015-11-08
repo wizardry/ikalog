@@ -203,21 +203,28 @@ app.instans.View.InputForm = Marionette.View.extend({
 
 //output
 app.instans.View.ScoreItem = Marionette.ItemView.extend({
-	ui:{},
-	events:{},
-	initialize:function(){
-
-	},
+	template:'#outputListTemp',
+	tagName:'tr',
 });
 
 app.instans.View.ScoreList = Marionette.CompositeView.extend({
+	el:'#outputListWrap',
+	template:'#outputListWrapTemp',
+	childViewContainer:function(){
+		return 'tbody'
+	},
+	childView:app.instans.View.ScoreItem,
 	ui:{},
 	events:{},
 	initialize:function(){
-
+		this.listenTo(this.collection,'sync',this.render);
+	},
+	attachHtml:function(collectionView, childView){
+		collectionView.$el.find('tbody').prepend(childView.el);
 	},
 });
-
+app.instans.View.outputFileter = Marionette.View.extend({
+})
 //settings
 app.instans.View.Setting = Marionette.View.extend({
 	ui:{},
