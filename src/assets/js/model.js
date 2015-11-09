@@ -33,7 +33,7 @@ app.instans.Model.Scores = Backbone.Collection.extend({
 app.instans.Model.User = Backbone.Model.extend({
 	defaults:{
 		name:''
-	}
+	},
 });
 app.instans.Model.Users = Backbone.Collection.extend({
 	initialize:function(){

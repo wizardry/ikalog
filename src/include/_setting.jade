@@ -1,2 +1,48 @@
-.settingPageBlock
+.settingPageBlock.js-settingView
 	h2 設定
+	.formWrap
+		.formBlock
+			h3 アカウントを変更する
+			form#userChangeForm
+				dl
+					dt ユーザー名
+					dd
+						select#userChangeFormSlect
+				.submitWrap
+					p
+						label.submitArea.button(for="selectUserSubmit") 変更
+							button(type="submit" id="selectUserSubmit")
+		.formBlock
+			h3 アカウントを追加する
+			form#userAddForm
+				dl
+					dt ユーザー名
+					dd
+						input(type='text')#addUserName
+				.submitWrap
+					p
+						label.submitArea.button(for="addUserSubmit") 追加
+							button(type="submit" id="addUserSubmit")
+		.formBlock
+			h3 アカウントを削除する
+			form#userDelForm
+				dl
+					dt ユーザー名
+					dd
+						select#DelUserName
+				.submitWrap
+					p
+						label.submitArea.button(for="delUserSubmit") 削除
+							button(type="submit" id="delUserSubmit")
+		.formBlock
+			h3 データをエクスポートする
+			.submitWrap
+				p.submitArea.button#exportForm エクスポート
+		.formBlock
+			h3 データをインポートする
+			.submitWrap
+				p.submitArea.button#importForm インポート
+		.formBlock
+			h3 データをすべて削除する
+			.submitWrap
+				p.submitArea.button#allDeleteForm 削除

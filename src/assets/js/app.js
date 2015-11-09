@@ -9,7 +9,7 @@ $(function(){
 
 	//ユーザー
 	app.model.users = new app.instans.Model.Users({
-		model:new app.instans.Model.User()
+		model:app.instans.Model.User
 	});
 	app.model.users.fetch();
 

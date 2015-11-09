@@ -3,13 +3,13 @@ app.model		={};
 app.view		={};
 
 //localstorage と ajaxの使い分け
-Backbone.sync = function(method, model, options) {
-  if(model.localStorage || (model.collection && model.collection.localStorage)  || !model.url) {
-    return Backbone.localSync.call(this, method, model, options);
-  }
+// Backbone.sync = function(method, model, options) {
+//   if(model.localStorage || (model.collection && model.collection.localStorage)  || !model.url) {
+//     return Backbone.localSync.call(this, method, model, options);
+//   }
 
-  return Backbone.ajaxSync.call(this, method, model, options);
-};
+//   return Backbone.ajaxSync.call(this, method, model, options);
+// };
 
 //router
 app.Router = Backbone.Router.extend({
@@ -65,6 +65,13 @@ app.Router = Backbone.Router.extend({
 	settings:function index(){
 		$(function(){
 			// app.view.settingsView.render();
+			var settingView = new app.instans.View.Setting({
+					
+				collection:{
+					scores:app.model.scores,
+					users:app.model.users,
+				}
+			});
 			$('.howtoPageBlock,.outputPageBlock,.inputPageBlock').hide();
 			$('.settingPageBlock').show();
 		})

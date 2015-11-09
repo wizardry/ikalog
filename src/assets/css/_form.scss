@@ -12,7 +12,9 @@
 
 input[type=text],input[type=password],
 input[type=email],input[type=number],input[type=url],
-input[type=search],input[type=tel]{}
+input[type=search],input[type=tel]{
+	padding:5px 3px;
+}
 
 
 // hint
@@ -25,7 +27,9 @@ input[type=time],input[type=datetime]{}
 // optionを弄るなら独自で作成する
 // multipleを考慮してheightは指定しない。
 //　もしくは[multiple]にて別途指定する。
-select{}
+select{
+	padding:5px 10px;
+}
 
 //
 textarea{}

@@ -1,6 +1,46 @@
 .outputPageBlock
 	h2 閲覧
 	.filterSetitngArea.js-filterSettingView
+		.accordionWrap.js-toggleWrap
+			p.accordionTrigger.js-toggleTrigger フィルタリング設定
+			.accordionContent.js-toggleContent.hide
+				.formWrap
+					dl
+						dt 期間を指定する
+						dd
+							select
+								option 過去n試合
+								option 過去n日
+						dd
+							|過去
+							input(type="number")
+					dl
+						dt ルールを指定する
+						dd
+							select
+								option 指定しない
+								option ナワバリ
+								option エリア
+								option ヤグラ
+								option ホコ
+
+					dl
+						dt ステージを指定する
+						dd
+							select
+					dl
+						dt ブキを指定する
+						dd
+							select
+					dl
+						dt 登録時のウデマエを指定する
+						dd
+							select
+					dl
+						dt ユーザーを指定する
+						dd
+							select
+
 	.viewArea.js-outputView
 		dl
 			dt k/d比
@@ -36,11 +76,6 @@
 
 		script(type="text/html" id="outputListWrapTemp")
 			.sectionBlock
-						
-						
-						
-						
-						
-						
-				tbody#outputListElem
 		div#outputListWrap
+		div.hide.nullField
+			p 登録データがありません。

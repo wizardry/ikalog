@@ -1,55 +1,59 @@
 .inputPageBlock
 	h2 入力
 
-	.sectionBlock.basicSettingBlock.js-toggleWrap.js-basicSettingView
-		.buttonWrap
-			p.button.js-toggleTrigger 基本設定
-		.formWrap.js-toggleContent.hide
-			dl
-				dt ウデマエ
-				dd
-					select#basicInputUdemae
-						option(value="none") 設定しない
-						- var udemae = ['C-','C','C+','B-','B','B+','A-','A','A+','S','S+'];
-						each val in udemae 
-							option(value="#{val}")= val
-			dl
-				dt ルール
-				dd
-					select#basicInputRule
-						option(value="none") 設定しない
-						- var rules = ['ナワバリ','エリア','ヤグラ','ホコ'];
-						each val in rules
-							option(value="#{val}")= val
-			dl
-				dt ステージ
-				dd
-					ul.checkList.basicStage#basicInputStage
-						li
-							input(value="none" name="basicInputStage" id="basicInputStage_none") 
-							label(for="basicInputStage_none") 設定しない
+	.sectionBlock.basicSettingBlock.js-basicSettingView
+		.accordionWrap.js-toggleWrap
+			p.accordionTrigger.js-toggleTrigger 基本設定
+			.accordionContent.js-toggleContent.hide
+				.formWrap
+					dl
+						dt ウデマエ
+						dd
+							select#basicInputUdemae
+								option(value="none") 設定しない
+								- var udemae = ['C-','C','C+','B-','B','B+','A-','A','A+','S','S+'];
+								each val in udemae 
+									option(value="#{val}")= val
+					dl
+						dt ルール
+						dd
+							select#basicInputRule
+								option(value="none") 設定しない
+								- var rules = ['ナワバリ','エリア','ヤグラ','ホコ'];
+								each val in rules
+									option(value="#{val}")= val
+					dl
+						dt ステージ
+						dd
+							ul.checkList.basicStage#basicInputStage
+								li
+									input(value="none" name="basicInputStage" id="basicInputStage_none") 
+									label(for="basicInputStage_none") 設定しない
 
-			dl
-				dt ブキ
-				dd
-					select#basicInputWeapon
-						option(value="none") 設定しない
+					dl
+						dt ブキ
+						dd
+							select#basicInputWeapon
+								option(value="none") 設定しない
 
-			dl
-				dt コメントテンプレート
-				dd
-					textarea#basicInputComment
+					dl
+						dt コメントテンプレート
+						dd
+							textarea#basicInputComment
+					.buttonWrap
+						p.button.js-toggleClose 閉じる
 	.sectionBlock.js-inputFormView
 		h3 戦績
 		form#input
 			.formWrap
-				dl
-					dt Kill
-					dd
-						input(type="number" id="inputKill")
-				dl
-					dt Death
-					dd
+				.colWrap
+					dl.col2
+						dt Kill
+						dd
+							input(type="number" id="inputKill")
+					dl.col2
+						dt Death
+						dd
 						input(type="number" id="inputDeath")
 				dl
 					dt ステージ

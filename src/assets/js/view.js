@@ -1,8 +1,27 @@
 app.instans.View = {};
 //wrapper
 app.instans.View.Body = Marionette.View.extend({
-	ui:{},
-	events:{},
+	el:'body',
+	ui:{
+		toggleButton:'.js-toggleTrigger',
+		toggleClose: '.js-toggleClose'
+	},
+	events:{
+		'click @ui.toggleButton':function toggleArea(e){
+			var $elem = $(e.currentTarget);
+			$elem.closest('.js-toggleWrap').find('.js-toggleContent').toggle();
+			if($elem.hasClass('current')){
+				$elem.removeClass('current');
+			}else{
+				$elem.addClass('current');
+			}
+		},
+		'click @ui.toggleClose':function(e){
+			var $elem = $(e.currentTarget);
+			$elem.closest('.js-toggleWrap').find('.js-toggleContent').toggle();
+			$elem.closest('.js-toggleWrap').find('.js-toggleTrigger').removeClass('current');
+		}
+	},
 	initialize:function(){
 
 	},
@@ -13,14 +32,10 @@ app.instans.View.Body = Marionette.View.extend({
 app.instans.View.BasicInputForm = Marionette.View.extend({
 	el:'.js-basicSettingView',
 	ui:{
-		toggleButton:'.js-toggleTrigger',
 		input:'#basicInputUdemae,#basicInputRule,#basicInputWeapon,#basicInputComment',
 		checkbox:'[name="basicInputStage"]'
 	},
 	events:{
-		'click @ui.toggleButton':function toggleArea(e){
-			$(e.currentTarget).closest('.js-toggleWrap').find('.js-toggleContent').toggle();
-		},
 		'change @ui.checkbox':function(e){
 			//ステージのチェックボックス制御
 			var $elem = $(e.currentTarget);
@@ -248,7 +263,9 @@ app.instans.View.ScoreList = Marionette.CompositeView.extend({
 	initialize:function(){
 		this.listenTo(this.collection,'sync',this.render);
 		this.listenTo(this.collection,'sync',this.math);
+		this.listenTo(this.collection,'sync',this.isNull);
 		this.math();
+		this.isNull();
 	},
 	attachHtml:function(collectionView, childView){
 		collectionView.$el.find('.sectionBlock').prepend(childView.el);
@@ -276,21 +293,115 @@ app.instans.View.ScoreList = Marionette.CompositeView.extend({
 						Math.floor( (killTotal / len) * 100) / 100 ,
 						Math.floor( (deathTotal / len) * 100) / 100
 					];
-		winRatio  = Math.floor( (winlose[0] / len) * 100 ) / 100;
+		winRatio  = Math.floor( (winlose[0] / len) * 100 )
 		console.log('killRatio:' + killRatio + ' killAvg:' + killAvg + ' winRatio:' + winRatio)
 
 		$('.js-scoreRatio').html(killRatio+'<span>kill</span>');
 		$('.js-scoreAverage').html(killAvg[0] + '<span>k</span> / ' + killAvg[1] + '<span>d</span>');
 		$('.js-winRatio').html(winRatio + '<span>%</span>');
 	},
+	isNull:function(){
+		if(this.collection.length === 0){
+			$('.nullField').show();
+		}else{
+			$('.nullField').hide();
+		}
+	}
 });
 app.instans.View.outputFileter = Marionette.View.extend({
 })
 //settings
 app.instans.View.Setting = Marionette.View.extend({
-	ui:{},
-	events:{},
+	el:'.js-settingView',
+	ui:{
+		'userChangeForm' : '#userChangeForm',
+		'userAddForm'    : '#userAddForm',
+		'userDelForm'    : '#userDelForm',
+		'exportButton'   : '#exportForm',
+		'importButton'   : '#importForm',
+		'dataDelButton'  : '#allDeleteForm',
+	},
+	events:{
+		'submit @ui.userChangeForm' : 'userChange',
+		'submit @ui.userAddForm'    : 'userAdd',
+		'submit @ui.userDelForm'    : 'userDel',
+		'click @ui.exportButton'    : 'exportFunc',
+		'click @ui.importButton'    : 'importFunc',
+		'click @ui.dataDelButton'   : 'dataDelete',
+	},
 	initialize:function(){
+		console.log('setting view init');
+		console.log(this.ui.userChangeForm)
+		this.listenTo(this.collection.users,'change',this.setSelectUser);
+		this.listenTo(this.collection.users,'update',this.setSelectUser);
 
+		this.setSelectUser();
+	},
+	setSelectUser:function(){
+		var node = '';
+		_.each(this.collection.users.toJSON(),function(user,i){
+			node += '<option value="' + user.id + '">' + user.name + '</option>';
+		})
+		$(this.ui.userChangeForm).find('select').html(node);
+		$(this.ui.userDelForm).find('select').html(node);
+
+	},
+	userChange:function(e){
+		localStorage.currentUser = $(this.ui.userChangeForm).find('select').val();
+		this.collection.users.currentUser = localStorage.currentUser;
+	},
+	userAdd:function(e){
+		if($(this.ui.userAddForm).find('#addUserName').val() === ''){
+			return;
+		}
+		var username = $(this.ui.userAddForm).find('#addUserName').val();
+		this.collection.users.create({
+			name:username
+		})
+		$(this.ui.userAddForm).find('#addUserName').val('');
+		alert('ユーザー：' + username + 'を追加しました。\nアカウント変更から変更できます。')
+	},
+	userDel:function(e){
+		var self = this ;
+		console.log(this.collection.users)
+		if(this.collection.users.length === 1){
+			alert('これ以上ユーザーを削除できません。');
+			return;
+		}
+		var modelId = $(this.ui.userDelForm).find('select').val();
+		var userdata = this.collection.scores.where({'userid':modelId})
+		var delYes = window.confirm('ユーザーに紐づいたスコア '+userdata.length+' 件もすべて削除してしまいます。\nよろしいですか？')
+		if(!delYes) return;
+
+		//scoreを削除
+		_.each(userdata,function(user,i){
+			self.collection.scores.get(user.id).destroy();
+		});
+		//userを削除後selectを再描画
+		this.collection.users.get(modelId).destroy().always(function(res){
+			self.setSelectUser();
+			alert('削除しました')
+		});
+	},
+	exportFunc:function(e){
+		alert('未実装');
+	},
+	importFunc:function(e){
+		alert('未実装');
+	},
+	dataDelete:function(e){
+		alert('未実装');
+		var delYes = window.confirm('ユーザーやスコアすべてを削除してしまいます。\nよろしいですか？')
+		if(!delYes) return ;
+		_.each(app.model.users.models,function(user,i){
+			console.log(user)
+			user.destroy();
+		});
+		_.each(app.model.scores.models,function(score,i){
+			console.log(score)
+			score.destroy();
+		});
+		localStorage.clear();
+		location.reload();
 	},
 });
