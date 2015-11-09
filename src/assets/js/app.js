@@ -26,5 +26,9 @@ $(function(){
 	//views
 	app.view.bodyView = new app.instans.View.Body();
 
-
+	setTimeout(function(){
+		$(function(){
+			$('.contentOuter').nextAll().remove();
+		})
+	},300)
 })
