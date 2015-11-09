@@ -2,7 +2,10 @@ app.instans = {};
 app.instans.Model = {};
 //基本設定
 app.instans.Model.BasicSetting = Backbone.Model.extend({
-
+	defaults:{
+		id:0
+	},
+	localStorage: new Backbone.LocalStorage('setting'),
 })
 //閲覧フィルター
 app.instans.Model.outputFilter = Backbone.Model.extend({

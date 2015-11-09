@@ -18,6 +18,10 @@ $(function(){
 	app.model.stageMaster  = new app.instans.Model.Stage();
 	app.model.inputSetting      = new app.instans.Model.BasicSetting();
 
+	// app.model.weaponMaster.fetch();
+	// app.model.stageMaster.fetch();
+	// app.model.inputSetting.fetch();
+
 	//スコア入力
 	app.model.scores = new app.instans.Model.Scores();
 	app.model.scores.fetch();
