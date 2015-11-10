@@ -24,7 +24,9 @@ body{
 	display: none;
 }
 
-
+a{
+	color:#FF4747;
+}
 .globalHeader{
 	.globalHeaderLogos{
 		padding:5px 10px;
@@ -290,11 +292,13 @@ label.button{
 }
 .logArea{
 	position: fixed;
-	bottom:60px;
+	top:30px;
 	width: 100%;
 	left:0;
 	background:rgba(0,0,0,.75);
 	color:#fff;
+	padding:10px;
+	box-sizing:border-box;
 }
 .contentOuter{
 	padding-bottom:44px;

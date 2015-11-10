@@ -40,21 +40,8 @@ app.instans.View.BasicInputForm = Marionette.View.extend({
 	},
 	events:{
 		'change @ui.checkbox':function(e){
-			//ステージのチェックボックス制御
-			if(!this.isSettingSave) return;
-			var $elem = $(e.currentTarget);
-			var length = $('[name="basicInputStage"]').length
-			if($elem.val() === 'none' && $elem.prop('checked')){
-				$('[name="basicInputStage"]').not('#basicInputStage_none').prop('checked',false);
-				$('[name="basicInputStage"]').not(':checked').prop('disabled',true);
-
-			}else if($('[name="basicInputStage"]:checked').length === 2 ){
-				$('[name="basicInputStage"]').not(':checked').prop('disabled',true);
-
-			}else{
-				$('[name="basicInputStage"]').not(':checked').prop('disabled',false);
-
-			}
+			console.log(this)
+			this.checkboxControll();
 			//model sets
 			var setData = {};
 			setData.stage = [];
@@ -62,11 +49,10 @@ app.instans.View.BasicInputForm = Marionette.View.extend({
 				setData.stage.push($(this).val());
 			});
 			this.model.setting.set(setData);
-			this.model.setting.save({sync:false});
+			this.model.setting.save();
 			console.log('setting.model set = ' + this.model.setting.get('stage'));
 		},
 		'change @ui.input':function(e){
-			if(!this.isSettingSave) return;
 			console.log(e)
 			var $elem = $(e.currentTarget);
 			var setData = {};
@@ -86,7 +72,7 @@ app.instans.View.BasicInputForm = Marionette.View.extend({
 
 			setData[key] = $elem.val();
 			this.model.setting.set(setData);
-			this.model.setting.save({sync:false});
+			this.model.setting.save();
 			console.log('setting.model set = ' + this.model.setting.get(key));
 		},
 	},
@@ -98,7 +84,31 @@ app.instans.View.BasicInputForm = Marionette.View.extend({
 	collection:null,
 	initialize:function(){
 		console.log('basicsetting veiw init');
+		console.log(this)
 	},
+	checkboxControll:function(e){
+		console.log('checkboxControll')
+		console.log(e)
+		console.log(this)
+		//ステージのチェックボックス制御
+		console.log($('#basicInputStage_none').prop('checked'))
+		var length = $('[name="basicInputStage"]').length
+		if($('#basicInputStage_none').prop('checked')){
+			console.log('basic setting isNone')
+			$('[name="basicInputStage"]').not('#basicInputStage_none').prop('checked',false);
+			$('[name="basicInputStage"]').not('#basicInputStage_none').prop('disabled',true);
+			$('#basicInputStage_none').prop('checked',true);
+
+		}else if($('[name="basicInputStage"]:checked').length === 2 ){
+			console.log('basic setting is2Set')
+			$('[name="basicInputStage"]').not(':checked').prop('disabled',true);
+
+		}else{
+			console.log('basic setting isNotSet')
+			$('[name="basicInputStage"]').not(':checked').prop('disabled',false);
+
+		}
+	}
 });
 
 //戦績入力部分のDOMとModel紐付け
@@ -131,8 +141,13 @@ app.instans.View.InputForm = Marionette.View.extend({
 					console.log(res)
 					//log表示
 					var node ='';
-					node += '<div class="logArea">'
-					node += '<p>'+res.get('rule') + ' - ' +res.get('kill')+'k'+res.get('death')+'d '+app.const.get('result')[res.get('result')].name+'</p>'
+					node += '<div class="logArea">';
+					node += '<p>';
+					if(res.has('rule'))  node += res.get('rule') + ' - ';
+					if(res.has('kill'))  node += res.get('kill') + 'k'
+					if(res.has('death')) node += res.get('death')+'d '
+					if(res.has('result'))  node += app.const.get('result')[res.get('result')].name
+					node += '</p>'
 					node += '</div>'
 					$('body').append(node)
 					setTimeout(function(){
@@ -143,7 +158,7 @@ app.instans.View.InputForm = Marionette.View.extend({
 
 					//form初期化
 					var _temp;
-					if(!setting.get('template')){
+					if(setting.has('template')){
 						_temp = '';
 					}else{
 						_temp = setting.get('template');
@@ -183,13 +198,14 @@ app.instans.View.InputWrap = Marionette.View.extend({
 				setting:this.model.setting,
 			}
 		});
+		console.log(this.view.setting)
 		this.view.setting.parentView = this;
 
 		this.view.form = new app.instans.View.InputForm({
 			model:{
-				setting:app.model.inputSetting
+				setting:this.model.setting
 			},
-			collection:app.model.scores,
+			collection:this.collection,
 		});
 		this.view.form.parentView = this;
 
@@ -205,9 +221,9 @@ app.instans.View.InputWrap = Marionette.View.extend({
 			self.stageGenNode()
 		});
 		//ストレージに保存されているsettingがあった場合フォームにそれらを前もって入れてあげる。
-		view.setting.listenTo(this.model.setting,'sync',function(res){
-			view.setting.setSetting();
-		});
+		// view.setting.listenTo(this.model.setting,'sync',function(res){
+		// 	
+		// });
 
 		//基本設定が変更されると戦績のUIが変更されるようにする。
 		//basicviewを反映させるためchange
@@ -225,10 +241,15 @@ app.instans.View.InputWrap = Marionette.View.extend({
 				if(!self.model.setting.hasChanged()){
 					self.model.setting.fetch({sync:true}).done(function(res){
 						console.log(res)
-						inputStageSelectGen()
+						//戦績入力部分
+						self.setSettingFetch()
+
+						//基本設定部分
+						self.setLoadSetting();
+
 					}).fail(function(res){
 						if(res === 'Record Not Found'){
-							self.setSettingInit()
+							self.inputStageSelectGen()
 						}
 						console.log(res)
 					});
@@ -236,21 +257,21 @@ app.instans.View.InputWrap = Marionette.View.extend({
 				}
 			})
 		}
-		function inputStageSelectGen(){
-			//基本設定でステージを過去弄っていなければ戦績にステージを全部出す。
-			if(!self.model.setting.has('stage')){
-				//初期化
-				var vals = self.model.stage.get('stage');
-				var node = app.funcs.radioGen(self.model.stage.get('stage'),'inputStage');
-				console.log(vals)
-				$('#inputStageWrap').html(node);
-			}else{
-				console.log(this)
-				this.setSettingInit()
-			}
-		}
 		console.log(this.model.setting.hasChanged());
 
+	},
+	inputStageSelectGen:function (){
+		//基本設定でステージを過去弄っていなければ戦績にステージを全部出す。
+		if(!this.model.setting.has('stage')){
+			//初期化
+			var vals = this.model.stage.get('stage');
+			var node = app.funcs.radioGen(this.model.stage.get('stage'),'inputStage');
+			console.log(vals)
+			$('#inputStageWrap').html(node);
+		}else{
+			console.log(this)
+			this.setSettingFetch()
+		}
 	},
 	weaponGenNode:function(){
 		var node = ''
@@ -262,71 +283,57 @@ app.instans.View.InputWrap = Marionette.View.extend({
 		node = app.funcs.checkboxGen(this.model.stage.get('stage'),'basicInputStage');
 		$(this.view.setting.el).find('#basicInputStage').html(node);
 	},
-	setSettingInit:function(){
+	setSetting:function(a,b,c){
+		console.log(a)
+		console.log(b)
+		console.log(c)
+	},
+	setSettingFetch:function(){
+		//設定がFetchされたときに戦績入力画面にデータを入れてあげる。
+		//fetch && stage があること前提
+		var change = this.model.setting.changed;
+		var node = '';
+		if('stage' in change && change.stage[0] !== 'none'){
+			console.log(change.stage)
+			node = app.funcs.radioGen(change.stage,'inputStage');
+
+			//DOM差し込みと、指定なしを削除
+			$('#inputStageWrap').html(node).find('li').eq(0).remove();
+		}
+		if('template' in change){
+			$('#InputComment').val(change.template);
+		}
 
 	},
 	setSettingChange:function(model){
+		console.log(model)
 	},
-	setSettingFunc:function(model,obj){
-		//戦績入力ステージ部分
-			// $('#inputStageWrap').empty();
-			// console.log(model)
-			// var val = model.get('stage')
-			// console.log(val)
-			// var vals;
-			// if(!val || val[0] === 'none'){
-			// 	 vals = this.model.stage.get('stage');
-			// 	 var node = app.funcs.radioGen(this.model.stage.get('stage'),'inputStage');
-			// 	 $('#inputStageWrap').html(node);
-			// }else{
-			// 	vals = model.get('stage');
-			// 	var node = app.funcs.radioGen(vals,'inputStage');
-			// 	$('#inputStageWrap').html(node);
-			// 	$('#inputStageWrap li').eq(0).remove();
-			// }
-		//戦績入力テンプレート部分
-			// $('#InputComment').val(model.get('template'))
-	},
-	setSetting:function(){
+	setLoadSetting:function(){
+		//setting Fetch時に 読み込んだデータを基本設定に入れてあげる。
+		console.log('setLoadSetting fire')
 		var setting = this.model.setting.toJSON();
 		var self = this;
-		console.log(this.model.setting)
-		console.log(this.isSettingSave)
-		if(this.isSettingSave) return;
-		console.log(!setting)
-		if(!setting) {
-			self.isSettingSave = true;
-			return;
-		}
+
 		console.log(this.model.setting.has('udemae'))
 		if(this.model.setting.has('udemae')) {
-			console.log($('#basicInputUdemae').val())
 			$('#basicInputUdemae').val(setting.udemae);
-			console.log($('#basicInputUdemae').val())
 		}
 		if(this.model.setting.has('rule')) {
-			console.log($('#basicInputRule').val())
 			$('#basicInputRule').val(setting.rule);
-			console.log($('#basicInputRule').val())
 		}
 		if(this.model.setting.has('weapon')) {
-			console.log(setting.weapon)
-			console.log($('#basicInputWeapon').val())
 			$('#basicInputWeapon').val(setting.weapon);
-			console.log($('#basicInputWeapon').val())
 		}
 		if(this.model.setting.has('template')) {
 			$('#basicInputComment').val(setting.template);
 		}
 		if(this.model.setting.has('stage')){
 			_.each(setting.stage,function(d,i){
-				console.log(d)
-				console.log(i)
-				console.log($('[name="basicInputStage"][value="'+d+'"]').prop('checked'))
 				$('[name="basicInputStage"][value="'+d+'"]').prop('checked',true);
-				console.log($('[name="basicInputStage"][value="'+d+'"]').prop('checked'))
 			});
-			$('[name="basicInputStage"]').trigger('change')
+			console.log(this.view.form)
+			console.log(this.view.setting)
+			this.view.setting.checkboxControll();
 		}
 	},
 
@@ -339,6 +346,7 @@ app.instans.View.ScoreItem = Marionette.ItemView.extend({
 	className:'viewBlock',
 	templateHelpers:{
 		_result:function(){
+			if(!this.result) return '未登録';
 			return app.const.get('result')[this.result].name;
 		},
 		resultClass:function(res){

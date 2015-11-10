@@ -2,6 +2,10 @@ $(function(){
 	var router = new app.Router();
 	Backbone.history.start();
 
+	window.onerror = function(msg,file,line,column,err){
+		alert('ERR:'+msg);
+	};
+
 	//models=========================================
 
 	//定数
