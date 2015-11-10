@@ -22,21 +22,16 @@ app.Router = Backbone.Router.extend({
 	},
 	index:function index(){
 		$(function(){
-			var settingView = new app.instans.View.BasicInputForm({
-				model:{
-					weapon:app.model.weaponMaster,
-					stage:app.model.stageMaster,
-					setting:app.model.inputSetting,
-				}
-			});
-			var formView = new app.instans.View.InputForm({
+			var view;
+			view = new app.instans.View.InputWrap({
 				model:{
 					weapon:app.model.weaponMaster,
 					stage:app.model.stageMaster,
 					setting:app.model.inputSetting
 				},
 				collection:app.model.scores,
-			});
+			})
+			console.log(view)
 			$('.howtoPageBlock,.outputPageBlock,.settingPageBlock').hide();
 			$('.inputPageBlock').show();
 		})

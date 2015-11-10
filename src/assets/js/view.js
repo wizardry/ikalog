@@ -32,6 +32,7 @@ app.instans.View.Body = Marionette.View.extend({
 //form
 app.instans.View.BasicInputForm = Marionette.View.extend({
 	el:'.js-basicSettingView',
+	parentView:null,
 	ui:{
 		input:'#basicInputUdemae,#basicInputRule,#basicInputWeapon,#basicInputComment',
 		checkbox:'[name="basicInputStage"]'
@@ -96,51 +97,6 @@ app.instans.View.BasicInputForm = Marionette.View.extend({
 	collection:null,
 	initialize:function(){
 		console.log('basicsetting veiw init');
-		var self = this;
-		if(!this.model.weapon)		this.model.weapon   = new app.instans.Model.Weapon();
-		if(!this.model.stage)		this.model.stage    = new app.instans.Model.Stage();
-		if(!this.model.setting)		this.model.setting  = new app.instans.Model.BasicSetting();
-
-		var node = '';
-		this.listenTo(this.model.weapon,'sync',function(res){
-			console.log(1)
-			weaponGenNode()
-		});
-		this.listenTo(this.model.stage,'sync',function(res){
-			console.log(2)
-			stageGenNode()
-		});
-		this.listenTo(this.model.setting,'sync',function(res){
-			console.log(this)
-			this.setSetting();
-		});
-		//fetchs
-		if(!this.model.weapon.has('weapons') || !this.model.stage.has('stage')){
-			$.when(
-				this.model.weapon.fetch(),
-				this.model.stage.fetch()
-			).done(function(){
-				if(!self.model.setting.hasChanged()){
-					self.model.setting.fetch({sync:true}).done(function(res){console.log(res)});
-
-				}
-			})
-		}
-		console.log(this.model.setting.hasChanged())
-
-		// this.setSetting();
-
-		function weaponGenNode(){
-			node = ''
-			node = app.funcs.optionGen(self.model.weapon.get('weapons'));
-			$(self.el).find('#basicInputWeapon').html(node);
-		}
-		function stageGenNode(){
-			node = '';
-			node = app.funcs.checkboxGen(self.model.stage.get('stage'),'basicInputStage');
-			$(self.el).find('#basicInputStage').html(node);
-		}
-
 	},
 	isSettingSave:false,
 	setSetting:function(){
@@ -189,6 +145,7 @@ app.instans.View.BasicInputForm = Marionette.View.extend({
 });
 app.instans.View.InputForm = Marionette.View.extend({
 	el:'.js-inputFormView',
+	parentView:null,
 	ui:{
 		form:'#input'
 	},
@@ -250,39 +207,28 @@ app.instans.View.InputForm = Marionette.View.extend({
 		}
 	},
 	initialize:function(){
-		if(!this.collection)	this.collection 	= new app.instans.Model.Scores();
-		if(!this.model.setting)	this.model.setting  = new app.instans.Model.BasicSetting()
-		if(!this.model.weapon)	this.model.weapon   = new app.instans.Model.Weapon();
-		if(!this.model.stage)	this.model.stage    = new app.instans.Model.Stage();
-
-		//basicviewを反映させるためchange
-		this.listenTo(this.model.setting,'change',this.setSettingChange);
-		console.log(this.model.setting)
-		this.setSettingInit(this.model.setting);
-
-		if(!this.model.setting.has('stage')){
-			//初期化
-			var vals = this.model.stage.get('stage');
-			var node = app.funcs.radioGen(this.model.stage.get('stage'),'inputStage');
-			$('#inputStageWrap').html(node);
-		}
-
-
-
 	},
 	setSettingInit:function(model){
 		var obj = model.toJSON();
 		var ary = [];
 		var i = 0;
 		var self  = this;
-		_.each(obj,function(val,key){
-			if(key === 'stage' || key === 'template'){
-				ary[i] = {};
-				ary[i][key] = val;
-				i++
-			}
-		})
+		console.log(obj)
+		if(!model.has('stage')){
+			console.log(this)
+			console.log(this.parentView.model.stage)
+			obj.stage = model.get('stage')
+		}
+			_.each(obj,function(val,key){
+				if(key === 'stage' || key === 'template'){
+					var _val = val;
+					ary[i] = {};
+					ary[i][key] = _val;
+					i++
+				}
+			})
 		console.log(ary)
+
 		_.each(ary,function(val,ii){
 			self.setSettingFunc(model,val);
 		})
@@ -293,13 +239,15 @@ app.instans.View.InputForm = Marionette.View.extend({
 		this.setSettingFunc(model,obj);
 	},
 	setSettingFunc:function(model,obj){
+		console.log(obj)
 		console.log(_.keys(obj))
 		if(_.keys(obj)[0] === 'stage'){
 			$('#inputStageWrap').empty();
+			console.log(model)
 			var val = model.get('stage')
 			console.log(val)
 			var vals;
-			if(val[0] === 'none' || !val){
+			if(!val || val[0] === 'none'){
 				 vals = this.model.stage.get('stage');
 				 var node = app.funcs.radioGen(this.model.stage.get('stage'),'inputStage');
 				 $('#inputStageWrap').html(node);
@@ -315,7 +263,84 @@ app.instans.View.InputForm = Marionette.View.extend({
 		}
 	}
 });
-app.instans.View.InputForm = Marionette.View.extend({});
+app.instans.View.InputWrap = Marionette.View.extend({
+	el:'.js-inputWrapView',
+	view:{
+		setting:null,
+		form:null
+	},
+	initialize:function(){
+		//VIEW SETTING --------------------------------------------
+		var self = this;
+		this.view.setting = new app.instans.View.BasicInputForm({
+			model:{
+				setting:this.model.setting,
+			}
+		});
+		this.view.setting.parentView = this;
+		console.log(this.view.setting)
+		this.view.form = new app.instans.View.InputForm({
+			model:{
+				setting:app.model.inputSetting
+			},
+			collection:app.model.scores,
+		});
+		this.view.form.parentView = this;
+		if($(this.view.form.el).find('#inputStageWrap li').length < 2){
+			this.view.form.setSettingInit(this.model.setting)
+		}
+		console.log(this.view.form)
+
+
+		//LISTENTO SETTING ------------------------------------------
+		var view = this.view;
+		view.setting.listenTo(this.model.weapon,'sync',function(res){
+			self.weaponGenNode()
+		});
+		view.setting.listenTo(this.model.stage,'sync',function(res){
+			self.stageGenNode()
+		});
+		view.setting.listenTo(this.model.setting,'sync',function(res){
+			view.setting.setSetting();
+		});
+		console.log(view)
+		//basicviewを反映させるためchange
+		view.form.listenTo(this.model.setting,'change',view.form.setSettingChange);
+
+		//fetchs
+		if(!this.model.weapon.has('weapons') || !this.model.stage.has('stage')){
+			$.when(
+				this.model.weapon.fetch(),
+				this.model.stage.fetch()
+			).done(function(){
+				if(!self.model.setting.hasChanged()){
+					self.model.setting.fetch({sync:true}).done(function(res){console.log(res)});
+				}
+			})
+		}
+		console.log(this.model.setting.hasChanged());
+
+		if(!this.model.setting.has('stage')){
+			//初期化
+			var vals = this.model.stage.get('stage');
+			var node = app.funcs.radioGen(this.model.stage.get('stage'),'inputStage');
+			$('#inputStageWrap').html(node);
+		}
+
+
+	},
+	weaponGenNode:function(){
+		var node = ''
+		node = app.funcs.optionGen(this.model.weapon.get('weapons'));
+		$(this.view.setting.el).find('#basicInputWeapon').html(node);
+	},
+	stageGenNode:function(){
+		var node = '';
+		node = app.funcs.checkboxGen(this.model.stage.get('stage'),'basicInputStage');
+		$(this.view.setting.el).find('#basicInputStage').html(node);
+	},
+
+});
 
 //output
 app.instans.View.ScoreItem = Marionette.ItemView.extend({
