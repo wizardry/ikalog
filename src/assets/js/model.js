@@ -6,11 +6,11 @@ app.instans.Model.BasicSetting = Backbone.Model.extend({
 		id:0
 	},
 	localStorage: new Backbone.LocalStorage('setting'),
-})
+});
 //閲覧フィルター
 app.instans.Model.outputFilter = Backbone.Model.extend({
 
-})
+});
 //スコア
 app.instans.Model.Score = Backbone.Model.extend({
 	defaults:{
@@ -64,14 +64,14 @@ app.instans.Model.Users = Backbone.Collection.extend({
 app.instans.Model.Weapon = Backbone.Model.extend({
 	url:'./assets/js/json/weapon.json',
 	parse:function(res){
-		console.log('weapon parse')
+		console.log('weapon parse');
 		console.log(res);
 		return res;
 	}
 });
 app.instans.Model.Stage = Backbone.Model.extend({
 	initialize:function(){
-		console.log('stage init')
+		console.log('stage init');
 	},
 	url:'./assets/js/json/stage.json',
 });
@@ -93,6 +93,6 @@ app.instans.Model.Const = Backbone.Model.extend({
 					val:3,
 					name:'ノックアウト負け'
 			}]
-		})
+		});
 	},
 });

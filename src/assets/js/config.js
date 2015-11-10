@@ -30,11 +30,11 @@ app.Router = Backbone.Router.extend({
 					setting:app.model.inputSetting
 				},
 				collection:app.model.scores,
-			})
-			console.log(view)
+			});
+			console.log(view);
 			$('.howtoPageBlock,.outputPageBlock,.settingPageBlock').hide();
 			$('.inputPageBlock').show();
-		})
+		});
 	},
 	output:function index(){
 		$(function(){
@@ -48,14 +48,14 @@ app.Router = Backbone.Router.extend({
 			// app.view.outputView.render();
 			$('.howtoPageBlock,.inputPageBlock,.settingPageBlock').hide();
 			$('.outputPageBlock').show();
-		})
+		});
 	},
 	howto:function index(){
 		$(function(){
 			// app.view.howtoView.render();
 			$('.inputPageBlock,.outputPageBlock,.settingPageBlock').hide();
 			$('.howtoPageBlock').show();
-		})
+		});
 	},
 	settings:function index(){
 		$(function(){
@@ -69,7 +69,7 @@ app.Router = Backbone.Router.extend({
 			});
 			$('.howtoPageBlock,.outputPageBlock,.inputPageBlock').hide();
 			$('.settingPageBlock').show();
-		})
+		});
 	},
 });
 
@@ -77,39 +77,39 @@ app.Router = Backbone.Router.extend({
 app.funcs = {
 	optionGen:function(data){
 		var node = '';
-		node += '<option value="none">設定しない</option>'
+		node += '<option value="none">設定しない</option>';
 		_.each(data,function(modeldata,i){
-			node += '<option value="'+modeldata+'">' +modeldata+ '</option>'
-		})
+			node += '<option value="'+modeldata+'">' +modeldata+ '</option>';
+		});
 		return node;
 	},
 	checkboxGen:function(data,name){
 		var node = '';
-		node += '<li>'
-		node += '<input type="checkbox" value="none" name="'+name+'" id="'+name+'_none">'
-		node += '<label for="'+name+'_none">設定しない</label>'
-		node += '</li>'
+		node += '<li>';
+		node += '<input type="checkbox" value="none" name="'+name+'" id="'+name+'_none">';
+		node += '<label for="'+name+'_none">設定しない</label>';
+		node += '</li>';
 		_.each(data,function(modeldata,i){
-			node += '<li>'
-			node += '<input type="checkbox" value="'+modeldata+'" name="'+name+'" id="'+name+'_'+i+'">'
-			node += '<label for="'+name+'_'+i+'">'+modeldata+'</label>'
-			node += '</li>'
-		})
+			node += '<li>';
+			node += '<input type="checkbox" value="'+modeldata+'" name="'+name+'" id="'+name+'_'+i+'">';
+			node += '<label for="'+name+'_'+i+'">'+modeldata+'</label>';
+			node += '</li>';
+		});
 		return node;
 	},
 	radioGen:function(data,name){
 		var node = '';
-		node += '<li>'
-		node += '<input type="radio" value="none" name="'+name+'" id="'+name+'_none">'
-		node += '<label for="'+name+'_none">設定しない</label>'
-		node += '</li>'
+		node += '<li>';
+		node += '<input type="radio" value="none" name="'+name+'" id="'+name+'_none">';
+		node += '<label for="'+name+'_none">設定しない</label>';
+		node += '</li>';
 		_.each(data,function(modeldata,i){
-			node += '<li>'
-			node += '<input type="radio" value="'+modeldata+'" name="'+name+'" id="'+name+'_'+i+'">'
-			node += '<label for="'+name+'_'+i+'">'+modeldata+'</label>'
-			node += '</li>'
-		})
+			node += '<li>';
+			node += '<input type="radio" value="'+modeldata+'" name="'+name+'" id="'+name+'_'+i+'">';
+			node += '<label for="'+name+'_'+i+'">'+modeldata+'</label>';
+			node += '</li>';
+		});
 		return node;
 	}
 
-}
+};

@@ -25,7 +25,7 @@ $(function(){
 	//スコア入力
 	app.model.scores = new app.instans.Model.Scores();
 	app.model.scores.fetch();
-	app.model.filter = new app.instans.Model.outputFilter()
+	app.model.filter = new app.instans.Model.outputFilter();
 
 	//views
 	app.view.bodyView = new app.instans.View.Body();
@@ -33,6 +33,6 @@ $(function(){
 	setTimeout(function(){
 		$(function(){
 			$('.contentOuter').nextAll().remove();
-		})
-	},300)
-})
+		});
+	},300);
+});
