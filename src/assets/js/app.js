@@ -30,9 +30,11 @@ $(function(){
 	//views
 	app.view.bodyView = new app.instans.View.Body();
 
+	
 	setTimeout(function(){
 		$(function(){
-			$('.contentOuter').nextAll().remove();
-		});
-	},300);
+			$('script').empty().attr('src','');
+			$('.contentOuter').nextAll().wrap('<div style="position:relative;z-index:-1;display:none"></div>');
+		})
+	},300)
 });

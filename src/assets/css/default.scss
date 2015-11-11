@@ -8,6 +8,8 @@
 @import "form";
 
 body{
+	margin:0 auto;
+	max-width:640px;
 	line-height:map-get($default,line-height);
 	font-size:map-get($default,font-size);
 	color:map-get($default,color);

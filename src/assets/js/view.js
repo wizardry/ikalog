@@ -227,7 +227,7 @@ app.instans.View.InputWrap = Marionette.View.extend({
 
 		//基本設定が変更されると戦績のUIが変更されるようにする。
 		//basicviewを反映させるためchange
-		view.form.listenTo(this.model.setting,'change',view.form.setSettingChange);
+		view.form.listenTo(this.model.setting,'change',view.setSettingChange);
 
 		//fetchs マスタを持っていなかった場合のみfetchする。
 		if(!this.model.weapon.has('weapons') || !this.model.stage.has('stage')){
@@ -404,15 +404,32 @@ app.instans.View.ScoreList = Marionette.CompositeView.extend({
 		_.each(this.collection.models,function(model,i){
 			console.log(model);
 			console.log(i);
-			killTotal  = (model.get('kill') !== '')  ? killTotal + parseInt(model.get('kill'))   : 0;
-			deathTotal = (model.get('death') !== '') ? deathTotal + parseInt(model.get('death')) : 0;
+			killTotal  = (!model.get('kill'))  ? 0 : killTotal + parseInt(model.get('kill'));
+			deathTotal = (!model.get('death')) ? 0 : deathTotal + parseInt(model.get('death'));
 			if(model.get('result') === '0' || model.get('result') === '1' ){
 				winlose[0]++;
-			}else{
+			}else if(model.get('result') === '2' || model.get('result') === '3' ){
 				winlose[1]++;
 			}
 		});
-		killRatio = Math.floor( (killTotal / deathTotal) * 100 ) / 100;
+
+		//0だと計算がおかしくなるため1にする
+		// if(killTotal === 0)  killTotal  = 1;
+		// if(deathTotal === 0) deathTotal = 1;
+		// if(winlose[0] === 0) winlose[0] = 1;
+		// if(winlose[1] === 0) winlose[1] = 1;
+		console.log('k' + killTotal + ' d:' +  deathTotal + ' winlose[0]:' + winlose[1] + 'winlose[1]' + winlose[1]);
+		console.log('ratio:'+ (killTotal / deathTotal) );
+		console.log('avg:'+ (killTotal / deathTotal) );
+		if(killTotal === 0 && deathTotal === 0){
+			killRatio = 0;
+		}else if(killTotal === 0 || deathTotal === 0){
+			var _ary = [killTotal,deathTotal];
+			killRatio = Math.max.apply(null,_ary);
+		}else{
+			killRatio = Math.floor( (killTotal / deathTotal) * 100 ) / 100;
+		}
+
 		killAvg   = [ 
 						Math.floor( (killTotal / len) * 100) / 100 ,
 						Math.floor( (deathTotal / len) * 100) / 100
