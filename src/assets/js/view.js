@@ -49,7 +49,17 @@ app.instans.View.BasicInputForm = Marionette.View.extend({
 				setData.stage.push($(this).val());
 			});
 			this.model.setting.set(setData);
-			this.model.setting.save();
+			console.log(this.model.setting);
+			this.model.setting.save({
+				success:function(res){
+					console.log('save success res');
+					console.log(res);
+					
+				}
+			}).done(function(res){
+				console.log('save done');
+				console.log(res);
+			});
 			console.log('setting.model set = ' + this.model.setting.get('stage'));
 		},
 		'change @ui.input':function(e){
@@ -227,7 +237,7 @@ app.instans.View.InputWrap = Marionette.View.extend({
 
 		//基本設定が変更されると戦績のUIが変更されるようにする。
 		//basicviewを反映させるためchange
-		view.form.listenTo(this.model.setting,'change',view.setSettingChange);
+		this.listenTo(this.model.setting,'change',this.setSettingChange);
 
 		//fetchs マスタを持っていなかった場合のみfetchする。
 		if(!this.model.weapon.has('weapons') || !this.model.stage.has('stage')){
@@ -289,16 +299,22 @@ app.instans.View.InputWrap = Marionette.View.extend({
 		console.log(c);
 	},
 	setSettingFetch:function(){
-		//設定がFetchされたときに戦績入力画面にデータを入れてあげる。
+		//設定がFetch、変更されたときに戦績入力画面にデータを入れてあげる。
 		//fetch && stage があること前提
 		var change = this.model.setting.changed;
 		var node = '';
-		if('stage' in change && change.stage[0] !== 'none'){
-			console.log(change.stage);
-			node = app.funcs.radioGen(change.stage,'inputStage');
+		if('stage' in change){
+			//指定しないを選択しているかどうか
+			var isNone = $.inArray('none',change.stage) !== -1;
 
+			if(!isNone){
+				node = app.funcs.radioGen(change.stage,'inputStage');
+			}else{
+				node = app.funcs.radioGen(this.model.stage.get('stage'),'inputStage');
+			}
 			//DOM差し込みと、指定なしを削除
 			$('#inputStageWrap').html(node).find('li').eq(0).remove();
+
 		}
 		if('template' in change){
 			$('#InputComment').val(change.template);
@@ -306,7 +322,8 @@ app.instans.View.InputWrap = Marionette.View.extend({
 
 	},
 	setSettingChange:function(model){
-		console.log(model);
+		console.log('setSettingChange');
+		this.setSettingFetch();
 	},
 	setLoadSetting:function(){
 		//setting Fetch時に 読み込んだデータを基本設定に入れてあげる。
