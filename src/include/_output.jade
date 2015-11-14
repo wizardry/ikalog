@@ -51,6 +51,15 @@
 		dl
 			dt 勝率
 			dd.js-winRatio
+		div#outputListWrap
+
+
+		div.hide.nullField
+			p 登録データがありません。
+		script(type="text/html" id="outputListWrapTemp")
+			.sectionBlock
+			#sectionBlockWrap
+
 		script(type="text/html" id="outputListTemp")
 			h3.viewTitle 
 				span(class!="result <%= resultClass() %>") <%= _result() %>
@@ -73,9 +82,3 @@
 					td <%= comment %>
 			p.editButtonWrap
 				a.editButton.js-edit(data-modelid!="<%= id%>") この戦績を編集する
-
-		script(type="text/html" id="outputListWrapTemp")
-			.sectionBlock
-		div#outputListWrap
-		div.hide.nullField
-			p 登録データがありません。

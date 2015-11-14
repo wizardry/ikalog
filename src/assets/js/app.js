@@ -33,8 +33,8 @@ $(function(){
 	
 	setTimeout(function(){
 		$(function(){
-			$('script').empty().attr('src','');
+			// $('.contentOuter').nextAll('script').empty().attr('src','');
 			$('.contentOuter').nextAll().wrap('<div style="position:relative;z-index:-1;display:none"></div>');
-		})
-	},300)
+		});
+	},300);
 });

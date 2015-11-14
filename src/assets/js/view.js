@@ -395,20 +395,21 @@ app.instans.View.ScoreItem = Marionette.ItemView.extend({
 app.instans.View.ScoreList = Marionette.CompositeView.extend({
 	el:'#outputListWrap',
 	template:'#outputListWrapTemp',
-	childViewContainer:function(){
-		return '.sectionBlock';
-	},
 	childView:app.instans.View.ScoreItem,
-	ui:{},
-	events:{},
+	childViewContainer:function(){
+		return '#sectionBlockWrap';
+	},
 	initialize:function(){
-		this.listenTo(this.collection,'sync',this.render);
 		this.listenTo(this.collection,'sync',this.math);
 		this.listenTo(this.collection,'sync',this.isNull);
+		this.listenTo(this.collection,'sync',this.render);
+		this.collection.fetch();
 		this.math();
 		this.isNull();
 	},
 	attachHtml:function(collectionView, childView){
+		console.log(collectionView)
+		console.log(childView)
 		collectionView.$el.find('.sectionBlock').prepend(childView.el);
 	},
 	math:function(){
@@ -419,8 +420,6 @@ app.instans.View.ScoreList = Marionette.CompositeView.extend({
 		var winlose    = [0,0];
 		console.log(this.collection);
 		_.each(this.collection.models,function(model,i){
-			console.log(model);
-			console.log(i);
 			killTotal  = (!model.get('kill'))  ? 0 : killTotal + parseInt(model.get('kill'));
 			deathTotal = (!model.get('death')) ? 0 : deathTotal + parseInt(model.get('death'));
 			if(model.get('result') === '0' || model.get('result') === '1' ){

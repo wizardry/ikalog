@@ -38,16 +38,15 @@ app.Router = Backbone.Router.extend({
 	},
 	output:function index(){
 		$(function(){
-			var scoreView  = new app.instans.View.ScoreList({
+			var scoreView , filterView;
+			$('.outputPageBlock').show();
+			$('.howtoPageBlock,.inputPageBlock,.settingPageBlock').hide();
+			scoreView  = new app.instans.View.ScoreList({
 				collection:app.model.scores
 			});
-			var filterView = new app.instans.View.outputFileter({
+			filterView = new app.instans.View.outputFileter({
 				model:app.model.filter
 			});
-			scoreView.render();
-			// app.view.outputView.render();
-			$('.howtoPageBlock,.inputPageBlock,.settingPageBlock').hide();
-			$('.outputPageBlock').show();
 		});
 	},
 	howto:function index(){
