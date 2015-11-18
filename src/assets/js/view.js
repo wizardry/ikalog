@@ -390,6 +390,31 @@ app.instans.View.ScoreItem = Marionette.ItemView.extend({
 			return _stage;
 		}
 	},
+	ui:{
+		edit:'.js-edit'
+	},
+	events:{
+		'click @ui.edit':'editFunction'
+	},
+	initialize:function(){
+
+	},
+	editFunction:function(e){
+		var pos     = $(window).scrollTop();
+		var modelId = $(e.currentTarget).data('modelid');
+		var model   = this.model
+		console.log(model)
+		console.log(modelId)
+		console.log(pos)
+
+		$('.editFormWrap').show();
+		$('.outputPageBlock').hide();
+
+		var view = new app.instans.View.Edit({
+			model:model
+		});
+
+	}
 });
 
 app.instans.View.ScoreList = Marionette.CompositeView.extend({
@@ -466,7 +491,29 @@ app.instans.View.ScoreList = Marionette.CompositeView.extend({
 	}
 });
 app.instans.View.outputFileter = Marionette.View.extend({
+
 });
+
+//output edit
+app.instans.View.Edit = Marionette.View.extend({
+	el:'.js-editFormWrap',
+	ui:{
+		closeBtn:'.js-returnButton',
+	},
+	events:{
+		'click @ui.closeBtn':'returnFunc'
+	},
+	returnFunc:function(){
+		$('.js-editFormWrap').hide();
+		$('.outputPageBlock').show();
+		
+
+	},
+	initialize:function(){
+
+	}
+})
+
 //settings
 app.instans.View.Setting = Marionette.View.extend({
 	el:'.js-settingView',

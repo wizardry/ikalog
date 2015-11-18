@@ -82,3 +82,74 @@
 					td <%= comment %>
 			p.editButtonWrap
 				a.editButton.js-edit(data-modelid!="<%= id%>") この戦績を編集する
+.editFormWrap.js-editFormWrap
+	.editOverlay
+	.editContents
+		form#editForm
+			.buttonWrap
+				.js-returnButton.button 戻る
+			.formWrap
+				.colWrap
+					dl.col2
+						dt ウデマエ
+						dd
+							select#basicInputUdemae
+								option(value="none") 設定しない
+								- var udemae = ['S+','S','A+','A','A-','B+','B','B-','C+','C','C-'];
+								each val in udemae 
+									option(value="#{val}")= val
+					dl.col2
+						dt ルール
+						dd
+							select#editRule
+								option(value="none") 設定しない
+								- var rules = ['ナワバリ','エリア','ヤグラ','ホコ'];
+								each val in rules
+									option(value="#{val}")= val
+				.colWrap
+					dl.col2
+						dt Kill
+						dd
+							input(type="number" id="editKill")
+					dl.col2
+						dt Death
+						dd
+						input(type="number" id="editDeath")
+				dl
+					dt ステージ
+					dd
+						ul.checkList.editStage#editStageWrap
+							li
+								input(value="none" name="editStage" id="editStage_none") 
+								label(for="editStage_none") 設定しない
+
+				dl
+					dt ブキ
+					dd
+						select#editWeapon
+							option(value="none") 設定しない
+
+				dl
+					dt 勝敗
+					dd
+						ul.radioList.result
+							- var result = [{val:0,name:'ノックアウト勝ち'},{val:1,name:'タイムアップ勝ち'},{val:2,name:'タイムアップ負け'},{val:3,name:'ノックアウト負け'}]
+							each val in result
+								li
+									input(type="radio" name="editResult" value="#{val.val}" id="editResult_#{val.val}")
+									label(for="editResult_#{val.val}")= val.name
+				dl
+					dt コメント
+					dd
+						textarea#editComment
+				dl
+					dt ユーザー
+					dd
+						select#editUser
+				dl
+					dt タイムスタンプ
+					dd
+						input(type="datetime")#editTimestamp
+				.buttonWrap
+					.js-returnButton.button 戻る
+
