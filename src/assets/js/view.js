@@ -408,10 +408,16 @@ app.instans.View.ScoreItem = Marionette.ItemView.extend({
 		console.log(pos)
 
 		$('.editFormWrap').show();
-		$('.outputPageBlock').hide();
+		$('.outputViewBlock').hide();
 
 		var view = new app.instans.View.Edit({
-			model:model
+			model:{
+				data   : model,
+				weapon : app.model.weaponMaster,
+				stage  : app.model.stageMaster,
+				result : app.const,
+				users  : app.model.users
+			}
 		});
 
 	}
@@ -499,19 +505,118 @@ app.instans.View.Edit = Marionette.View.extend({
 	el:'.js-editFormWrap',
 	ui:{
 		closeBtn:'.js-returnButton',
+		input:'#editDeath,#editKill,#editComment,#editTimestampDate,#editTimestampTime',
+		select:'#editUdemae,#editRule,#editWeapon,#editUser',
+		radio:'[name=editStage],[name=editResult]'
 	},
 	events:{
-		'click @ui.closeBtn':'returnFunc'
+		'click @ui.closeBtn':'returnFunc',
+		'blur @ui.input':'changeInput',
+		'blur @ui.select':'changeSelect',
+		'change @ui.radio':'changeRadio',
 	},
 	returnFunc:function(){
 		$('.js-editFormWrap').hide();
-		$('.outputPageBlock').show();
-		
-
+		$('.outputViewBlock').show();
 	},
 	initialize:function(){
+		this.genDatasFunc();
+	},
+	genDatasFunc:function(){
+		var self = this;
+		console.log(_.isEmpty(this.model.stage.toJSON()))
+		if(_.isEmpty(this.model.stage.toJSON())){
+			console.log(this)
+			this.model.stage.fetch().done(function(res){
+				self.genStageFunc();
+			}).always(function(res){
+				console.log(res)
+			})
 
-	}
+		}else{
+			this.genStageFunc();
+		}
+		if(_.isEmpty(this.model.weapon.toJSON())){
+			console.log(this)
+			this.model.weapon.fetch().done(function(){
+				self.genWeaponFunc();
+			})
+		}else{
+			this.genWeaponFunc();
+		}
+
+		if(_.isEmpty(this.model.users.toJSON())){
+			this.model.users.fetch().done(function(){
+				self.genUsersFunc();
+			})
+		}else{
+			this.genUsersFunc();
+		}
+
+		//ホントはModel監視しなあかん。
+		this.setDataFunc();
+
+	},
+	genWeaponFunc:function(){
+		var node = '';
+		console.log('genwepons start')
+		node = app.funcs.optionGen(this.model.weapon.get('weapons'));
+		$(this.el).find('#editWeapon').html(node);
+		this.setDataDeferredFunc('weapon');
+	},
+	genStageFunc:function(){
+		var node = '';
+		console.log(this.model.stage)
+		node = app.funcs.radioGen(this.model.stage.get('stage'),'editStage');
+		$(this.el).find('#editStageWrap').html(node);
+		this.setDataDeferredFunc('stage');
+	},
+	genUsersFunc:function(){
+		console.log(this.model.users.toJSON())
+		node = '';
+		node = app.funcs.optionObjGen(this.model.users.toJSON(),'id','name');
+		$(this.el).find('#editUser').html(node);
+		this.setDataDeferredFunc('users');
+	},
+	setDataFunc:function(){
+		var model = this.model.data;
+
+		var date = moment(model.get('date')).format('YYYY-MM-DD');
+		var time = moment(model.get('date')).format('HH:mm:ss');
+		$('#editUdemae').val(model.get('udemae'));
+		$('#editRule').val(model.get('rule'));
+		$('#editKill').val(model.get('kill'));
+		$('#editDeath').val(model.get('death'));
+		$('#editResult_'+model.get('result')).prop('checked',true);
+		$('#editComment').val(model.get('comment'));
+		$('#editTimestampDate').val(date);
+		$('#editTimestampTime').val(time);
+	},
+	setDataDeferredFunc:function(type){
+		var model = this.model.data;
+		if(type === 'stage'){
+			console.log('[name=editStage][value="'+model.get('stage')+'"]')
+			$('[name=editStage][value="'+model.get('stage')+'"]').prop('checked',true);
+		}
+		if(type === 'weapon'){
+			$('#editWeapon').val(model.get('weapon'));
+		}
+		if(type === 'users'){
+			$('#editUser').val(model.get('userid'));
+		}
+	},
+	changeInput:function(e){
+		var type = $(e.currentTarget).attr('id');
+		alert($(e.currentTarget).val())
+	},
+	changeSelect:function(e){
+		var type = $(e.currentTarget).attr('id');
+		alert($(e.currentTarget).val())
+	},
+	changeRadio:function(e){
+		var type = $(e.currentTarget).attr('name');
+		alert($(e.currentTarget).val())
+	},
 })
 
 //settings

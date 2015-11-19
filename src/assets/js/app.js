@@ -20,7 +20,7 @@ $(function(){
 	//基本設定
 	app.model.weaponMaster = new app.instans.Model.Weapon();
 	app.model.stageMaster  = new app.instans.Model.Stage();
-	app.model.inputSetting      = new app.instans.Model.BasicSetting();
+	app.model.inputSetting = new app.instans.Model.BasicSetting();
 
 	//スコア入力
 	app.model.scores = new app.instans.Model.Scores();

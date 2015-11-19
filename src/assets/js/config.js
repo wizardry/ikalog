@@ -82,6 +82,14 @@ app.funcs = {
 		});
 		return node;
 	},
+	optionObjGen:function(objects,val,text){
+		// [{},{},{}] 形式
+		var node = '';
+		_.each(objects,function(object){
+			node += '<option value="'+object[val]+'">' +object[text]+ '</option>';
+		});
+		return node;
+	},
 	checkboxGen:function(data,name){
 		var node = '';
 		node += '<li>';

@@ -1,155 +1,158 @@
 .outputPageBlock
 	h2 閲覧
-	.filterSetitngArea.js-filterSettingView
-		.accordionWrap.js-toggleWrap
-			p.accordionTrigger.js-toggleTrigger フィルタリング設定
-			.accordionContent.js-toggleContent.hide
-				.formWrap
-					dl
-						dt 期間を指定する
-						dd
-							select
-								option 過去n試合
-								option 過去n日
-						dd
-							|過去
-							input(type="number")
-					dl
-						dt ルールを指定する
-						dd
-							select
-								option 指定しない
-								option ナワバリ
-								option エリア
-								option ヤグラ
-								option ホコ
+	.outputViewBlock
+		.filterSetitngArea.js-filterSettingView
+			.accordionWrap.js-toggleWrap
+				p.accordionTrigger.js-toggleTrigger フィルタリング設定
+				.accordionContent.js-toggleContent.hide
+					.formWrap
+						dl
+							dt 期間を指定する
+							dd
+								select
+									option 過去n試合
+									option 過去n日
+							dd
+								|過去
+								input(type="number")
+						dl
+							dt ルールを指定する
+							dd
+								select
+									option 指定しない
+									option ナワバリ
+									option エリア
+									option ヤグラ
+									option ホコ
 
-					dl
-						dt ステージを指定する
-						dd
-							select
-					dl
-						dt ブキを指定する
-						dd
-							select
-					dl
-						dt 登録時のウデマエを指定する
-						dd
-							select
-					dl
-						dt ユーザーを指定する
-						dd
-							select
+						dl
+							dt ステージを指定する
+							dd
+								select
+						dl
+							dt ブキを指定する
+							dd
+								select
+						dl
+							dt 登録時のウデマエを指定する
+							dd
+								select
+						dl
+							dt ユーザーを指定する
+							dd
+								select
 
-	.viewArea.js-outputView
-		dl
-			dt k/d比
-			dd.js-scoreRatio
-		dl
-			dt k/d平均
-			dd.js-scoreAverage
-		dl
-			dt 勝率
-			dd.js-winRatio
-		div#outputListWrap
+		.viewArea.js-outputView
+			dl
+				dt k/d比
+				dd.js-scoreRatio
+			dl
+				dt k/d平均
+				dd.js-scoreAverage
+			dl
+				dt 勝率
+				dd.js-winRatio
+			div#outputListWrap
 
 
-		div.hide.nullField
-			p 登録データがありません。
-		script(type="text/html" id="outputListWrapTemp")
-			.sectionBlock
-			#sectionBlockWrap
+			div.hide.nullField
+				p 登録データがありません。
+			script(type="text/html" id="outputListWrapTemp")
+				.sectionBlock
+				#sectionBlockWrap
 
-		script(type="text/html" id="outputListTemp")
-			h3.viewTitle 
-				span(class!="result <%= resultClass() %>") <%= _result() %>
-				span.date <%= date %>
-			table.viewTableRow
-				tr.kill
-					th kill
-					td <%= kill %>
-				tr.death
-					th death
-					td <%= death %>
-				tr.rule
-					th rule
-					td <%= _rule() %>
-				tr.stage
-					th stage
-					td <%= _stage() %>
-				tr.comment
-					th comment
-					td <%= comment %>
-			p.editButtonWrap
-				a.editButton.js-edit(data-modelid!="<%= id%>") この戦績を編集する
-.editFormWrap.js-editFormWrap
-	.editOverlay
-	.editContents
-		form#editForm
-			.buttonWrap
-				.js-returnButton.button 戻る
-			.formWrap
-				.colWrap
-					dl.col2
-						dt ウデマエ
-						dd
-							select#basicInputUdemae
-								option(value="none") 設定しない
-								- var udemae = ['S+','S','A+','A','A-','B+','B','B-','C+','C','C-'];
-								each val in udemae 
-									option(value="#{val}")= val
-					dl.col2
-						dt ルール
-						dd
-							select#editRule
-								option(value="none") 設定しない
-								- var rules = ['ナワバリ','エリア','ヤグラ','ホコ'];
-								each val in rules
-									option(value="#{val}")= val
-				.colWrap
-					dl.col2
-						dt Kill
-						dd
-							input(type="number" id="editKill")
-					dl.col2
-						dt Death
-						dd
-						input(type="number" id="editDeath")
-				dl
-					dt ステージ
-					dd
-						ul.checkList.editStage#editStageWrap
-							li
-								input(value="none" name="editStage" id="editStage_none") 
-								label(for="editStage_none") 設定しない
-
-				dl
-					dt ブキ
-					dd
-						select#editWeapon
-							option(value="none") 設定しない
-
-				dl
-					dt 勝敗
-					dd
-						ul.radioList.result
-							- var result = [{val:0,name:'ノックアウト勝ち'},{val:1,name:'タイムアップ勝ち'},{val:2,name:'タイムアップ負け'},{val:3,name:'ノックアウト負け'}]
-							each val in result
-								li
-									input(type="radio" name="editResult" value="#{val.val}" id="editResult_#{val.val}")
-									label(for="editResult_#{val.val}")= val.name
-				dl
-					dt コメント
-					dd
-						textarea#editComment
-				dl
-					dt ユーザー
-					dd
-						select#editUser
-				dl
-					dt タイムスタンプ
-					dd
-						input(type="datetime")#editTimestamp
+			script(type="text/html" id="outputListTemp")
+				h3.viewTitle 
+					span(class!="result <%= resultClass() %>") <%= _result() %>
+					span.date <%= date %>
+				table.viewTableRow
+					tr.kill
+						th kill
+						td <%= kill %>
+					tr.death
+						th death
+						td <%= death %>
+					tr.rule
+						th rule
+						td <%= _rule() %>
+					tr.stage
+						th stage
+						td <%= _stage() %>
+					tr.comment
+						th comment
+						td <%= comment %>
+				p.editButtonWrap
+					a.editButton.js-edit(data-modelid!="<%= id%>") この戦績を編集する
+	.editFormWrap.js-editFormWrap
+		.editOverlay
+		.editContents
+			form#editForm
 				.buttonWrap
 					.js-returnButton.button 戻る
+				.formWrap
+					.colWrap
+						dl.col2
+							dt ウデマエ
+							dd
+								select#editUdemae
+									option(value="none") 設定しない
+									- var udemae = ['S+','S','A+','A','A-','B+','B','B-','C+','C','C-'];
+									each val in udemae 
+										option(value="#{val}")= val
+						dl.col2
+							dt ルール
+							dd
+								select#editRule
+									option(value="none") 設定しない
+									- var rules = ['ナワバリ','エリア','ヤグラ','ホコ'];
+									each val in rules
+										option(value="#{val}")= val
+					.colWrap
+						dl.col2
+							dt Kill
+							dd
+								input(type="number" id="editKill")
+						dl.col2
+							dt Death
+							dd
+							input(type="number" id="editDeath")
+					dl
+						dt ステージ
+						dd
+							ul.checkList.editStage#editStageWrap
+								li
+									input(value="none" name="editStage" id="editStage_none") 
+									label(for="editStage_none") 設定しない
+
+					dl
+						dt ブキ
+						dd
+							select#editWeapon
+								option(value="none") 設定しない
+
+					dl
+						dt 勝敗
+						dd
+							ul.radioList.result
+								- var result = [{val:0,name:'ノックアウト勝ち'},{val:1,name:'タイムアップ勝ち'},{val:2,name:'タイムアップ負け'},{val:3,name:'ノックアウト負け'}]
+								each val in result
+									li
+										input(type="radio" name="editResult" value="#{val.val}" id="editResult_#{val.val}")
+										label(for="editResult_#{val.val}")= val.name
+					dl
+						dt コメント
+						dd
+							textarea#editComment
+					dl
+						dt ユーザー
+						dd
+							select#editUser
+					dl.timestamp
+						dt タイムスタンプ
+						dd
+							input(type="date")#editTimestampDate
+						dd
+							input(type="time")#editTimestampTime
+					.buttonWrap
+						.js-returnButton.button 戻る
 

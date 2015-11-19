@@ -283,13 +283,35 @@ label.button{
 			border-radius: 3px;
 			text-align: center;
 		}
-		&.result,&.basicStage,&.inputStage{
+		&.result,&.basicStage,&.inputStage,&.editStage{
 			padding:0;
 			@extend %clearfix;
 			li{
 				width: 50%;
 				float: left;
 			}
+		}
+	}
+	.timestamp{
+		@extend %clearfix;
+
+		dl{
+		}
+		dd{
+			box-sizing:border-box;
+			width: 50%;
+			float: left;
+			&:first-child{
+				padding-right:8px;
+			}
+			&:last-child{
+				padding-left:8px;
+			}
+		}
+		input{
+			box-sizing:border-box;
+			padding:5px 10px;
+			width:100%;
 		}
 	}
 }
@@ -314,7 +336,9 @@ label.button{
 }
 .howtoPageBlock,.outputPageBlock{
 	background:$green_base;
-
+	.button{
+		background:$green_dark;
+	}
 }
 .viewArea{
 	.viewBlock{
