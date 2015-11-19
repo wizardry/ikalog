@@ -357,6 +357,49 @@ app.instans.View.InputWrap = Marionette.View.extend({
 });
 
 //output
+app.instans.View.OutputWrapView = Marionette.View.extend({
+	el:'.outputPageBlock',
+	ui:{
+		edit:'.js-edit'
+	},
+	events:{
+		'click @ui.edit':'editFunction'
+	},
+	initialize:function(){
+		var self = this;
+		this.view = {};
+		this.view.scoreView  = new app.instans.View.ScoreList({
+			collection:self.collection
+		});
+		this.view.filterView = new app.instans.View.outputFileter({
+			model:self.model.filter
+		});
+		this.view.editView = new app.instans.View.Edit({
+			collection:self.collection,
+			model:{
+				weapon : self.model.weapon,
+				stage  : self.model.stage,
+				result : app.const,
+				users  : app.model.users
+			}
+		});
+
+		$('.js-editFormWrap').hide();
+		$('.outputViewBlock').show();
+	},
+	editFunction:function(e){
+		var pos     = $(window).scrollTop();
+		var modelId = $(e.currentTarget).data('modelid');
+		var model   = this.collection.get(modelId);
+		console.log(model)
+		this.view.editView.modelId = modelId;
+		$('.editFormWrap').show();
+		$('.outputViewBlock').hide();
+		this.view.editView.setDataFunc();
+
+	}
+
+});
 app.instans.View.ScoreItem = Marionette.ItemView.extend({
 	template:'#outputListTemp',
 	tagName:'div',
@@ -390,37 +433,9 @@ app.instans.View.ScoreItem = Marionette.ItemView.extend({
 			return _stage;
 		}
 	},
-	ui:{
-		edit:'.js-edit'
-	},
-	events:{
-		'click @ui.edit':'editFunction'
-	},
 	initialize:function(){
 
 	},
-	editFunction:function(e){
-		var pos     = $(window).scrollTop();
-		var modelId = $(e.currentTarget).data('modelid');
-		var model   = this.model
-		console.log(model)
-		console.log(modelId)
-		console.log(pos)
-
-		$('.editFormWrap').show();
-		$('.outputViewBlock').hide();
-
-		var view = new app.instans.View.Edit({
-			model:{
-				data   : model,
-				weapon : app.model.weaponMaster,
-				stage  : app.model.stageMaster,
-				result : app.const,
-				users  : app.model.users
-			}
-		});
-
-	}
 });
 
 app.instans.View.ScoreList = Marionette.CompositeView.extend({
@@ -515,6 +530,7 @@ app.instans.View.Edit = Marionette.View.extend({
 		'blur @ui.select':'changeSelect',
 		'change @ui.radio':'changeRadio',
 	},
+	modelId:'',
 	returnFunc:function(){
 		$('.js-editFormWrap').hide();
 		$('.outputViewBlock').show();
@@ -552,35 +568,27 @@ app.instans.View.Edit = Marionette.View.extend({
 		}else{
 			this.genUsersFunc();
 		}
-
-		//ホントはModel監視しなあかん。
-		this.setDataFunc();
-
 	},
 	genWeaponFunc:function(){
 		var node = '';
 		console.log('genwepons start')
 		node = app.funcs.optionGen(this.model.weapon.get('weapons'));
 		$(this.el).find('#editWeapon').html(node);
-		this.setDataDeferredFunc('weapon');
 	},
 	genStageFunc:function(){
 		var node = '';
 		console.log(this.model.stage)
 		node = app.funcs.radioGen(this.model.stage.get('stage'),'editStage');
 		$(this.el).find('#editStageWrap').html(node);
-		this.setDataDeferredFunc('stage');
 	},
 	genUsersFunc:function(){
 		console.log(this.model.users.toJSON())
 		node = '';
 		node = app.funcs.optionObjGen(this.model.users.toJSON(),'id','name');
 		$(this.el).find('#editUser').html(node);
-		this.setDataDeferredFunc('users');
 	},
 	setDataFunc:function(){
-		var model = this.model.data;
-
+		var model = this.collection.get(this.modelId);
 		var date = moment(model.get('date')).format('YYYY-MM-DD');
 		var time = moment(model.get('date')).format('HH:mm:ss');
 		$('#editUdemae').val(model.get('udemae'));
@@ -591,31 +599,63 @@ app.instans.View.Edit = Marionette.View.extend({
 		$('#editComment').val(model.get('comment'));
 		$('#editTimestampDate').val(date);
 		$('#editTimestampTime').val(time);
-	},
-	setDataDeferredFunc:function(type){
-		var model = this.model.data;
-		if(type === 'stage'){
-			console.log('[name=editStage][value="'+model.get('stage')+'"]')
-			$('[name=editStage][value="'+model.get('stage')+'"]').prop('checked',true);
-		}
-		if(type === 'weapon'){
-			$('#editWeapon').val(model.get('weapon'));
-		}
-		if(type === 'users'){
-			$('#editUser').val(model.get('userid'));
-		}
+
+		//他Modelとの連携が必要
+		$('[name=editStage][value="'+model.get('stage')+'"]').prop('checked',true);
+		$('#editWeapon').val(model.get('weapon'));
+		$('#editUser').val(model.get('userid'));
 	},
 	changeInput:function(e){
-		var type = $(e.currentTarget).attr('id');
-		alert($(e.currentTarget).val())
+		var self = this;
+		var model = this.collection.get(this.modelId)
+		var id = $(e.currentTarget).attr('id');
+		var key = '';
+		var val = '';
+		var setData = {};
+		if( id === 'editTimestampDate') key = 'date';
+		if( id === 'editTimestampTime') key = 'date';
+		if( id === 'editKill')          key = 'kill';
+		if( id === 'editDeath')         key = 'death';
+		if( id === 'editComment')       key = 'comment';
+		if(key === 'date'){
+			val = $('#editTimestampDate').val() +' '+ $('#editTimestampTime').val();
+		}else{
+			val = $(e.currentTarget).val();
+		}
+		setData[key] = val
+		model.set(setData);
+		model.save();
 	},
 	changeSelect:function(e){
-		var type = $(e.currentTarget).attr('id');
-		alert($(e.currentTarget).val())
+		var model = this.collection.get(this.modelId)
+		var id = $(e.currentTarget).attr('id');
+		var key = '';
+		var val = '';
+		var setData = {};
+
+		if( id === 'editUdemae' )       key = 'udemae';
+		if( id === 'editRule')          key = 'rule';
+		if( id === 'editWeapon')        key = 'weapon';
+		if( id === 'editUser')          key = 'userid';
+		val = $(e.currentTarget).val();
+
+		setData[key] = val;
+		model.set(setData);
+		model.save();
+
 	},
 	changeRadio:function(e){
-		var type = $(e.currentTarget).attr('name');
-		alert($(e.currentTarget).val())
+		var model = this.collection.get(this.modelId)
+		var name = $(e.currentTarget).attr('name');
+		var key = '';
+		var val = '';
+		var setData = {};
+
+		if( name === 'editStage' )  key = 'stage';
+		if( name === 'editResult' ) key = 'result';
+		val = $('[name='+name+']:checked').val();
+		setData[key] = val;
+		model.set(setData).save();
 	},
 })
 

@@ -38,15 +38,20 @@ app.Router = Backbone.Router.extend({
 	},
 	output:function index(){
 		$(function(){
-			var scoreView , filterView;
+			var outputView , scoreView , filterView , editView;
 			$('.outputPageBlock').show();
 			$('.howtoPageBlock,.inputPageBlock,.settingPageBlock').hide();
-			scoreView  = new app.instans.View.ScoreList({
-				collection:app.model.scores
+			outputView = new app.instans.View.OutputWrapView({
+				collection:app.model.scores,
+				model:{
+					filter : app.model.filter,
+					weapon : app.model.weaponMaster,
+					stage  : app.model.stageMaster,
+					result : app.const,
+					users  : app.model.users
+				}
 			});
-			filterView = new app.instans.View.outputFileter({
-				model:app.model.filter
-			});
+
 		});
 	},
 	howto:function index(){
