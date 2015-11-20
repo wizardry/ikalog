@@ -12,6 +12,9 @@ app.view		={};
 // };
 
 //router
+app.view.inputView;
+app.view.outputView;
+app.view.settingView;
 app.Router = Backbone.Router.extend({
 	routes:{
 		'':'index',
@@ -22,8 +25,7 @@ app.Router = Backbone.Router.extend({
 	},
 	index:function index(){
 		$(function(){
-			var view;
-			view = new app.instans.View.InputWrap({
+			app.view.inputView = new app.instans.View.InputWrap({
 				model:{
 					weapon:app.model.weaponMaster,
 					stage:app.model.stageMaster,
@@ -31,17 +33,16 @@ app.Router = Backbone.Router.extend({
 				},
 				collection:app.model.scores,
 			});
-			console.log(view);
 			$('.howtoPageBlock,.outputPageBlock,.settingPageBlock').hide();
 			$('.inputPageBlock').show();
 		});
 	},
 	output:function index(){
 		$(function(){
-			var outputView , scoreView , filterView , editView;
+
 			$('.outputPageBlock').show();
 			$('.howtoPageBlock,.inputPageBlock,.settingPageBlock').hide();
-			outputView = new app.instans.View.OutputWrapView({
+			app.view.outputView = new app.instans.View.OutputWrapView({
 				collection:app.model.scores,
 				model:{
 					filter : app.model.filter,
@@ -62,9 +63,11 @@ app.Router = Backbone.Router.extend({
 		});
 	},
 	settings:function index(){
+
 		$(function(){
 			// app.view.settingsView.render();
-			var settingView = new app.instans.View.Setting({
+
+			app.view.settingView = new app.instans.View.Setting({
 					
 				collection:{
 					scores:app.model.scores,

@@ -147,16 +147,17 @@ app.instans.View.InputForm = Marionette.View.extend({
 			var setting = this.model.setting;
 			this.collection.create(scoreData,{
 				wait:false,
+				sync:false,
 				success:function(res){
 					console.log(res);
 					//log表示
 					var node ='';
 					node += '<div class="logArea">';
 					node += '<p>';
-					if(res.has('rule'))  node += res.get('rule') + ' - ';
-					if(res.has('kill'))  node += res.get('kill') + 'k';
-					if(res.has('death')) node += res.get('death')+'d ';
-					if(res.has('result'))  node += app.const.get('result')[res.get('result')].name;
+					if(res.get('rule') !== '')    node += res.get('rule') + ' - ';
+					if(res.get('kill') !== '')    node += res.get('kill') + 'k';
+					if(res.get('death') !== '')   node += res.get('death')+'d ';
+					if(res.get('result') !== '')  node += app.const.get('result')[res.get('result')].name;
 					node += '</p>';
 					node += '</div>';
 					$('body').append(node);
@@ -226,10 +227,16 @@ app.instans.View.InputWrap = Marionette.View.extend({
 		view.setting.listenTo(this.model.weapon,'sync',function(res){
 			self.weaponGenNode();
 		});
+		if(!_.isEmpty(this.model.weapon)){
+			self.weaponGenNode();
+		}
 		//stageマスタ取得後に基本設定のステージにoptionを入れる
 		view.setting.listenTo(this.model.stage,'sync',function(res){
 			self.stageGenNode();
 		});
+		if(!_.isEmpty(this.model.stage)){
+			self.stageGenNode();
+		}
 		//ストレージに保存されているsettingがあった場合フォームにそれらを前もって入れてあげる。
 		// view.setting.listenTo(this.model.setting,'sync',function(res){
 		// 	
@@ -259,13 +266,30 @@ app.instans.View.InputWrap = Marionette.View.extend({
 
 					}).fail(function(res){
 						if(res === 'Record Not Found'){
-							self.inputStageSelectGen();
 						}
 						console.log(res);
 					});
 
 				}
 			});
+		}else{
+			var _settingModel = self.model.setting.toJSON();
+			delete _settingModel['id'];
+			if(_.isEmpty(_settingModel)){
+				self.model.setting.fetch().done(function(res){
+					//基本設定部分
+					self.setLoadSetting();
+					//戦績入力部分
+					self.inputStageSelectGen();
+
+				})
+			}
+			//基本設定部分
+			self.setLoadSetting();
+			//戦績入力部分
+			self.inputStageSelectGen();
+
+
 		}
 		console.log(this.model.setting.hasChanged());
 
@@ -433,8 +457,19 @@ app.instans.View.ScoreItem = Marionette.ItemView.extend({
 			return _stage;
 		}
 	},
+	onBeforeRender:function(a,b,c){
+		//IDがなかったらIDをつける
+		if(!this.model.has('id')){
+			var _modelData = this.model.clone();
+			var _models = new app.instans.Model.Scores();
+			_models.url = null;
+			_models.add(_modelData).save();
+			this.model.set({id:_models.at(0).get('id')});
+			_models.remove();
+			delete _models;
+		}
+	},
 	initialize:function(){
-
 	},
 });
 
@@ -520,12 +555,14 @@ app.instans.View.Edit = Marionette.View.extend({
 	el:'.js-editFormWrap',
 	ui:{
 		closeBtn:'.js-returnButton',
+		deleteBtn:'.js-deleteButton',
 		input:'#editDeath,#editKill,#editComment,#editTimestampDate,#editTimestampTime',
 		select:'#editUdemae,#editRule,#editWeapon,#editUser',
 		radio:'[name=editStage],[name=editResult]'
 	},
 	events:{
 		'click @ui.closeBtn':'returnFunc',
+		'click @ui.deleteBtn':'deleteFunc',
 		'blur @ui.input':'changeInput',
 		'blur @ui.select':'changeSelect',
 		'change @ui.radio':'changeRadio',
@@ -534,6 +571,15 @@ app.instans.View.Edit = Marionette.View.extend({
 	returnFunc:function(){
 		$('.js-editFormWrap').hide();
 		$('.outputViewBlock').show();
+	},
+	deleteFunc:function(){
+		var delFlg = window.confirm('この戦績を削除しますか？')
+		if(!delFlg) return;
+		var model = this.collection.get(this.modelId);
+		model.destroy();
+		$('.js-editFormWrap').hide();
+		$('.outputViewBlock').show();
+
 	},
 	initialize:function(){
 		this.genDatasFunc();
@@ -739,17 +785,10 @@ app.instans.View.Setting = Marionette.View.extend({
 		alert('未実装');
 	},
 	dataDelete:function(e){
-		alert('未実装');
 		var delYes = window.confirm('ユーザーやスコアすべてを削除してしまいます。\nよろしいですか？');
 		if(!delYes) return ;
-		_.each(app.model.users.models,function(user,i){
-			console.log(user);
-			user.destroy();
-		});
-		_.each(app.model.scores.models,function(score,i){
-			console.log(score);
-			score.destroy();
-		});
+		app.model.users.remove(app.model.users.models);
+		app.model.scores.remove(app.model.scores.models);
 		localStorage.clear();
 		location.reload();
 	},
