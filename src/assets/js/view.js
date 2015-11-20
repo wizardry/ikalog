@@ -547,7 +547,101 @@ app.instans.View.ScoreList = Marionette.CompositeView.extend({
 	}
 });
 app.instans.View.outputFileter = Marionette.View.extend({
+	el:'.js-filterSettingView',
+	ui:{
+		filterForm:'#filterForm',
+		clearButton:'.js-filterClear'
+	},
+	events:{
+		'submit @ui.filterForm' : 'filterSubmit',
+		'click @ui.clearButton' : 'filterClear'
+	},
+	initialize:function(){},
+	filterSubmit:function(){
+		console.log('filter submit ')
+		var collection = this.getValsFunc();
+	},
+	masterScores:app.model.scores,
+	getValsFunc:function(){
+		var vals = {
+			type    : $('#filterTermType').val(),
+			typeNum : $('#filterTermNumber').val(),
+			rule    : $('#filterRule').val(),
+			stage   : $('#filterStage').val(),
+			weapon  : $('#filterWeapon').val(),
+			udemae  : $('#filterUdemae').val(),
+			user    : $('#filterUser').val(),
+		};
+		var collection = app.model.scores.clone();
+		collection.url = null;
+		//範囲指定があった場合
+		var terms;
+		var termVal = vals.type;
+		var termTarget;
+		console.log(termVal)
+		console.log(vals.typeNum)
+		if(termVal !== 0 && vals.typeNum){
+			console.log('has term')
+			if(termVal === '1'){
+				termTarget = collection.length
+				if(termTarget < parseInt(vals.typeNum)) {
+					alert(vals.typeNum+'試合数のデータがありません。');
+					return false;
+				}
+				terms = collection.slice(0,vals.typeNum);
+			}
+			if(termVal === '2'){
+				var today     = moment();
+				var targetDay = moment(today).add(-1*parseInt(vals.typeNum),'days');
+				terms = collection.filter(function(model){
+					return moment(model.get('date')) > targetDay;
+				});
+			}
+			collection.reset(terms);
+		}
 
+		_.each(vals,function(val,key){
+			//値がなかったらスルー
+			if(!val || val === 'none' ) return;
+			//typeと値は別処理
+			if(key === 'type' || key === 'typeNum') return;
+
+			if(key === 'rule'){
+				var match = collection.filter(function(model){
+						return model.get('rule') === val;
+					});
+				collection.reset(match)
+			}
+			if(key === 'stage'){
+				var match = collection.filter(function(model){
+						return model.get('stage') === val;
+					});
+				collection.reset(match)
+			}
+			if(key === 'weapon'){
+				var match = collection.filter(function(model){
+						return model.get('weapon') === val;
+					});
+				collection.reset(match)
+			}
+			if(key === 'udemae'){
+				var match = collection.filter(function(model){
+						return model.get('udemae') === val;
+					});
+				collection.reset(match)
+			}
+			if(key === 'user'){
+				var match = collection.filter(function(model){
+						return model.get('userid') === val;
+					});
+				collection.reset(match)
+			}
+
+		});
+		console.log(collection)
+
+		return collection;
+	}
 });
 
 //output edit

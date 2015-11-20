@@ -5,42 +5,52 @@
 			.accordionWrap.js-toggleWrap
 				p.accordionTrigger.js-toggleTrigger フィルタリング設定
 				.accordionContent.js-toggleContent.hide
-					.formWrap
+					form.formWrap#filterForm
 						dl
 							dt 期間を指定する
 							dd
-								select
-									option 過去n試合
-									option 過去n日
+								select#filterTermType
+									option(value="0") 指定しない
+									option(value="1") 過去n試合
+									option(value="2") 過去n日
 							dd
 								|過去
-								input(type="number")
+								input(type="number")#filterTermNumber
 						dl
 							dt ルールを指定する
 							dd
-								select
-									option 指定しない
-									option ナワバリ
-									option エリア
-									option ヤグラ
-									option ホコ
+								select#filterRule
+									option(value="none") 設定しない
+									- var rules = ['ナワバリ','エリア','ヤグラ','ホコ'];
+									each val in rules
+										option(value="#{val}")= val
 
 						dl
 							dt ステージを指定する
 							dd
-								select
+								select#filterStage
 						dl
 							dt ブキを指定する
 							dd
-								select
+								select#filterWeapon
 						dl
 							dt 登録時のウデマエを指定する
 							dd
-								select
+								select#filterUdemae
+									option(value="none") 設定しない
+									- var udemae = ['S+','S','A+','A','A-','B+','B','B-','C+','C','C-'];
+									each val in udemae 
+										option(value="#{val}")= val
+
 						dl
 							dt ユーザーを指定する
 							dd
-								select
+								select#filterUser
+						.submitWrap
+							a(href="").button.js-filterClear フィルター解除
+
+							label(for="filterSubmit").button 絞り込む
+								input(type="submit" id="filterSubmit")
 
 		.viewArea.js-outputView
 			dl
